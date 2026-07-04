@@ -594,6 +594,15 @@
   }
   .reveal.in{ opacity:1; transform:translateY(0); }
 
+  .stripe-toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(10px);
+    background:var(--paper); color:#fff; font-size:13px; max-width:340px; text-align:center;
+    padding:10px 16px; border-radius:9px;
+    opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease;
+    z-index:300;
+  }
+  .stripe-toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
   }
@@ -1030,7 +1039,7 @@
             <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>90-day alert history</li>
             <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Learning Hub: cert prep tracks + course recs</li>
           </ul>
-          <a href="welcome-screen.html" class="btn-primary" style="text-align:center; justify-content:center">Start free trial</a>
+          <a href="welcome-screen.html" class="btn-primary" style="text-align:center; justify-content:center" data-stripe-checkout>Start free trial</a>
         </div>
         <div class="price-card">
           <div class="price-tier">Enterprise</div>
@@ -1172,7 +1181,31 @@
     });
   }, { threshold: 0.12 });
   revealEls.forEach(el => io.observe(el));
+
+  // Paste your Stripe Payment Link URL here (Stripe Dashboard -> Payment Links -> Create link).
+  // Payment Links are public checkout URLs -- no secret key or API token ever goes in this file.
+  const STRIPE_PAYMENT_LINK = '';
+
+  const stripeToast = document.getElementById('stripeToast');
+  function showStripeToast(msg){
+    stripeToast.textContent = msg;
+    stripeToast.classList.add('show');
+    clearTimeout(showStripeToast._t);
+    showStripeToast._t = setTimeout(() => stripeToast.classList.remove('show'), 3200);
+  }
+  document.querySelectorAll('[data-stripe-checkout]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (STRIPE_PAYMENT_LINK) {
+        window.location.href = STRIPE_PAYMENT_LINK;
+      } else {
+        showStripeToast('Add your Stripe Payment Link URL to STRIPE_PAYMENT_LINK to enable checkout.');
+      }
+    });
+  });
 </script>
+
+<div class="stripe-toast" id="stripeToast"></div>
 
 </body>
 </html>
