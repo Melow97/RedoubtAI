@@ -1,0 +1,10 @@
+{
+  "name": "redoubt",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Redoubt static site + serverless backend (chat proxy, Stripe webhook).",
+  "dependencies": {
+    "@upstash/redis": "^1.38.0",
+    "stripe": "^17.4.0"
+  }
+}

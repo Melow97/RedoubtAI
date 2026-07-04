@@ -70,6 +70,32 @@ Vercel (or Netlify) to actually get answers:
 For local testing, copy `.env.example` to `.env.local`, fill in your key, and run
 `vercel dev` (or any Node server that mounts `api/chat.js` at `/api/chat`).
 
+## Real Stripe checkout with auto-granted Pro access
+
+There's no real user auth in this project — sign-in is email-only, no passwords. Paying
+marks that email as Pro; entering the same email again unlocks it. Setup:
+
+1. **Add a Redis store** — Vercel project → **Storage** tab → add a **Redis** integration
+   (Marketplace, free tier). This auto-injects `UPSTASH_REDIS_REST_URL` and
+   `UPSTASH_REDIS_REST_TOKEN` — nothing to copy/paste yourself.
+2. **Create a Payment Link** — Stripe Dashboard (start in **Test mode**) → Payment Links →
+   Create link for the Pro plan. Paste the resulting public URL into `STRIPE_PAYMENT_LINK`
+   in `index.html` and `upgrade-plans.html` (this is a public checkout URL, not a secret —
+   safe to hand-edit directly).
+3. **Add a webhook** — Stripe Dashboard → Developers → Webhooks → Add endpoint, URL
+   `https://<your-vercel-domain>/api/stripe-webhook`, listening for `checkout.session.completed`
+   and `customer.subscription.deleted`. Stripe shows a signing secret (`whsec_...`) once the
+   endpoint is created.
+4. In Vercel's **Settings → Environment Variables**, add `STRIPE_SECRET_KEY` (Stripe
+   Dashboard → Developers → API keys) and `STRIPE_WEBHOOK_SECRET` (from step 3). Both are
+   real secrets — env vars only, never git, never chat.
+5. Redeploy. Paying via the Payment Link now marks that email Pro in Redis; entering the
+   same email on the sign-in screen shows the Pro badge and unlocks the upgrade-gated UI.
+
+`api/stripe-webhook.js` verifies Stripe's signature on every request (tested against
+forged/tampered payloads — both are rejected) before writing anything, so a request can't
+grant itself Pro without a genuine signed event from Stripe.
+
 ## Explicitly out of scope (by design)
 
 No live execution of offensive tooling (password cracking, unrestricted network scanning, SQL injection execution, site cloning). DNS/IP lookup, WHOIS, and SSL cert checking are public-data lookups and are fine to include; anything that executes against a target isn't.

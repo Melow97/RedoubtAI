@@ -216,10 +216,10 @@
   <label class="field-label" for="email">Email</label>
   <input class="field-input" id="email" type="email" placeholder="you@company.com">
 
-  <a href="chat-interface.html" class="primary-btn" style="text-decoration:none;">
-    Continue
+  <button type="button" id="continueBtn" class="primary-btn">
+    <span id="continueLabel">Continue</span>
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </a>
+  </button>
 
   <div class="switch-row">
     Don't have an account? <a href="#">Sign up free</a>
@@ -229,6 +229,36 @@
     By continuing, you agree to Redoubt's <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
   </div>
 </div>
+
+<script>
+  const continueBtn = document.getElementById('continueBtn');
+  const continueLabel = document.getElementById('continueLabel');
+  const emailInput = document.getElementById('email');
+
+  continueBtn.addEventListener('click', async () => {
+    const email = emailInput.value.trim();
+    let plan = 'free';
+
+    if (email) {
+      continueLabel.textContent = 'Checking…';
+      continueBtn.disabled = true;
+      try {
+        const resp = await fetch('/api/check-plan', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = await resp.json();
+        if (resp.ok && data.plan === 'pro') plan = 'pro';
+      } catch {
+        // no backend here (e.g. a static host) -- fall back to free, don't block sign-in
+      }
+    }
+
+    localStorage.setItem('redoubt-user', JSON.stringify({ email, plan }));
+    window.location.href = 'chat-interface.html';
+  });
+</script>
 
 </body>
 </html>

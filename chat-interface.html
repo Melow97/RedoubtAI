@@ -186,6 +186,14 @@
     padding:2.5px 7px; border-radius:6px;
   }
   .sb-user-plan-note{ font-size:11px; color:var(--paper-faint); }
+  .free-badge{
+    display:inline-flex; align-items:center; gap:3px;
+    font-size:10px; font-weight:700; letter-spacing:0.03em;
+    color:var(--paper-dim);
+    background:var(--panel-3);
+    border:1px solid var(--line-strong);
+    padding:2.5px 7px; border-radius:6px;
+  }
 
   /* ---------------- main ---------------- */
   .main{ display:flex; flex-direction:column; height:100vh; min-width:0; }
@@ -669,12 +677,12 @@
 
     <div class="sb-bottom">
       <div class="sb-user">
-        <div class="avatar">M</div>
+        <div class="avatar" id="sbAvatar">?</div>
         <div>
-          <div class="sb-user-name">Mel</div>
-          <a href="upgrade-plans.html" class="sb-user-plan-row" style="text-decoration:none;">
-            <span class="pro-badge mono">★ PRO</span>
-            <span class="sb-user-plan-note mono">trial · 21 days left</span>
+          <div class="sb-user-name" id="sbUserName">Guest</div>
+          <a href="upgrade-plans.html" class="sb-user-plan-row" style="text-decoration:none;" id="sbPlanRow">
+            <span class="free-badge mono" id="sbPlanBadge">FREE</span>
+            <span class="sb-user-plan-note mono" id="sbPlanNote">Upgrade for full access</span>
           </a>
         </div>
       </div>
@@ -930,6 +938,34 @@
 <div class="toast" id="toast"></div>
 
 <script>
+  // ---------------- real plan/identity state (set at sign-in) ----------------
+  window.refreshChatIdentity = function(){
+    let user = null;
+    try { user = JSON.parse(localStorage.getItem('redoubt-user')); } catch {}
+    const email = user?.email || '';
+    const isPro = user?.plan === 'pro';
+
+    const nameEl = document.getElementById('sbUserName');
+    const avatarEl = document.getElementById('sbAvatar');
+    const badgeEl = document.getElementById('sbPlanBadge');
+    const noteEl = document.getElementById('sbPlanNote');
+
+    const displayName = email ? email.split('@')[0] : 'Guest';
+    nameEl.textContent = displayName;
+    avatarEl.textContent = displayName.charAt(0).toUpperCase();
+
+    if (isPro) {
+      badgeEl.textContent = '★ PRO';
+      badgeEl.className = 'pro-badge mono';
+      noteEl.textContent = email;
+    } else {
+      badgeEl.textContent = 'FREE';
+      badgeEl.className = 'free-badge mono';
+      noteEl.textContent = 'Upgrade for full access';
+    }
+  };
+  window.refreshChatIdentity();
+
   const overlay = document.getElementById('connectorsOverlay');
   function openConnectorsModal(){ overlay.classList.add('open'); }
   document.getElementById('openConnectors').onclick = openConnectorsModal;
