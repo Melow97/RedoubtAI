@@ -156,7 +156,7 @@
       <div class="plan-note">No card needed. Stay here as long as you like.</div>
       <ul class="plan-features">
         <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>1 monitored environment</li>
-        <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>A generous daily message allowance</li>
+        <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>A generous free token allowance</li>
         <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Phishing &amp; anomaly alerts</li>
         <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>7-day alert history</li>
       </ul>
@@ -177,10 +177,10 @@
         <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Up to 10 monitored environments</li>
         <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Automated incident response</li>
         <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Code &amp; vulnerability scanning</li>
-        <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Learning Hub: cert prep + course recs</li>
+        <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Learning Hub with cert prep</li>
         <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>90-day alert history</li>
       </ul>
-      <a href="welcome-screen.html" class="plan-btn primary" style="text-decoration:none; display:block;" data-stripe-checkout id="startTrialBtn">Start free month</a>
+      <a href="https://buy.stripe.com/test_5kQdR872F69da4Z03g5sA00" class="plan-btn primary" style="text-decoration:none; display:block;" data-stripe-checkout id="startTrialBtn">Start free month</a>
     </div>
   </div>
 
@@ -202,9 +202,8 @@
 <div class="stripe-toast" id="upgradeStripeToast"></div>
 
 <script>
-  // Paste your Stripe Payment Link URL here (Stripe Dashboard -> Payment Links -> Create link).
-  // Payment Links are public checkout URLs -- no secret key or API token ever goes in this file.
-  const STRIPE_PAYMENT_LINK = '';
+  // Stripe Payment Link for Pro upgrades
+  const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_5kQdR872F69da4Z03g5sA00';
 
   const stripeToast = document.getElementById("upgradeStripeToast");
   function showStripeToast(msg){
