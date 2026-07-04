@@ -5,6 +5,7 @@
   "description": "Redoubt static site + serverless backend (chat proxy, Stripe webhook).",
   "dependencies": {
     "@upstash/redis": "^1.38.0",
+    "@sendgrid/mail": "^8.1.3",
     "stripe": "^17.4.0"
   }
 }
