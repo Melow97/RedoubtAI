@@ -6,6 +6,7 @@
 
 const Stripe = require('stripe');
 const { Redis } = require('@upstash/redis');
+const { sendAdminEmail } = require('./_lib/email');
 
 // Stripe requires the raw, unparsed request body to verify the signature,
 // so the platform's automatic JSON body-parsing must be turned off here.
@@ -72,6 +73,7 @@ module.exports = async function handler(req, res) {
         const session = event.data.object;
         const email = session.customer_details?.email || session.customer_email;
         await markPlan(redis, email, 'pro');
+        await sendAdminEmail('New Pro signup', email + ' just upgraded to Pro.');
         break;
       }
       case 'customer.subscription.deleted': {

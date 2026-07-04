@@ -96,6 +96,27 @@ marks that email as Pro; entering the same email again unlocks it. Setup:
 forged/tampered payloads — both are rejected) before writing anything, so a request can't
 grant itself Pro without a genuine signed event from Stripe.
 
+## Usage limits + admin email alerts
+
+Chat requests are metered per email, per calendar month, in Redis (the same store as the
+Stripe plan lookup): Free gets 50,000 tokens/month, Pro gets 2,000,000 — edit `PLAN_LIMITS`
+in `api/chat.js` to change either number. Once someone hits their limit, `/api/chat` returns
+a clear 403 instead of calling the model. A small ring badge in the bottom-right corner of
+the chat page shows live usage (hidden until the first message, hover for the exact numbers
+and percentage), color-shifting cyan → amber → red as it climbs.
+
+Two admin notifications are wired up via [Resend](https://resend.com):
+- **New Pro signup** — fires from the Stripe webhook the moment someone pays.
+- **Heavy usage alert** — fires once per billing period the first time an account crosses
+  80% of its plan (tracked via a flag in Redis so it won't repeat every message after).
+
+Setup: get a key at resend.com, then in Vercel's environment variables add `RESEND_API_KEY`
+and `ADMIN_EMAIL` (where alerts land). `RESEND_FROM_EMAIL` is optional — it defaults to
+Resend's shared test address, which works immediately but isn't meant for real production
+volume; verify your own sending domain in Resend when you're ready for that. Leaving
+`RESEND_API_KEY`/`ADMIN_EMAIL` unset just skips emails silently — nothing else depends on
+them.
+
 ## Explicitly out of scope (by design)
 
 No live execution of offensive tooling (password cracking, unrestricted network scanning, SQL injection execution, site cloning). DNS/IP lookup, WHOIS, and SSL cert checking are public-data lookups and are fine to include; anything that executes against a target isn't.

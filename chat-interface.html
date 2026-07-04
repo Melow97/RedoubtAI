@@ -562,6 +562,24 @@
     display:flex; align-items:center; justify-content:center;
     opacity:0.85;
   }
+
+  .usage-badge{
+    position:fixed; right:18px; bottom:18px; z-index:150;
+    width:34px; height:34px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:default;
+  }
+  .usage-badge svg{ display:block; }
+  .usage-badge #usageRing{ transition:stroke-dashoffset .4s ease, stroke .2s ease; }
+  .usage-tooltip{
+    position:absolute; bottom:calc(100% + 10px); right:0;
+    background:var(--ink); color:#fff; font-size:12px;
+    white-space:nowrap; padding:8px 12px; border-radius:8px;
+    font-family:'JetBrains Mono', monospace;
+    opacity:0; pointer-events:none; transform:translateY(4px);
+    transition:opacity .15s ease, transform .15s ease;
+  }
+  .usage-badge:hover .usage-tooltip{ opacity:1; transform:translateY(0); }
 </style>
 </head>
 
@@ -831,6 +849,16 @@
     </div>
     <div class="input-note">Redoubt can be wrong about severity — confirm before acting on high-risk findings.</div>
   </div>
+
+  <div class="usage-badge" id="usageBadge" style="display:none;">
+    <svg width="34" height="34" viewBox="0 0 34 34">
+      <circle cx="17" cy="17" r="14" fill="none" stroke="var(--panel-3)" stroke-width="3"/>
+      <circle id="usageRing" cx="17" cy="17" r="14" fill="none" stroke="var(--cyan)" stroke-width="3"
+        stroke-linecap="round" stroke-dasharray="87.96" stroke-dashoffset="87.96"
+        transform="rotate(-90 17 17)"/>
+    </svg>
+    <div class="usage-tooltip" id="usageTooltip"></div>
+  </div>
 </div>
 
 <!-- CONNECTORS MODAL -->
@@ -1026,6 +1054,25 @@
 
   let conversationHistory = [];
 
+  const usageBadge = document.getElementById('usageBadge');
+  const usageRing = document.getElementById('usageRing');
+  const usageTooltip = document.getElementById('usageTooltip');
+  const USAGE_CIRCUMFERENCE = 87.96;
+
+  function formatTokens(n){
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+    return String(n);
+  }
+
+  function updateUsageBadge(usage){
+    usageBadge.style.display = 'flex';
+    const pct = Math.max(0, Math.min(100, usage.percent));
+    usageRing.style.strokeDashoffset = String(USAGE_CIRCUMFERENCE * (1 - pct / 100));
+    usageRing.style.stroke = pct >= 90 ? 'var(--red)' : pct >= 70 ? 'var(--amber)' : 'var(--cyan)';
+    usageTooltip.textContent = formatTokens(usage.used) + ' / ' + formatTokens(usage.limit) + ' tokens · ' + pct + '% of plan used';
+  }
+
   function setAiMessageText(msgEl, text){
     msgEl.querySelector('.msg-body').innerHTML = '<div class="msg-role">Redoubt</div><p style="white-space:pre-wrap;"></p>';
     msgEl.querySelector('.msg-body p').textContent = text;
@@ -1041,11 +1088,14 @@
 
     const aiMsg = addMessage('ai', '<div class="thinking"><span class="thinking-dots"><span></span><span></span><span></span></span><span class="thinking-text mono">Thinking…</span></div>');
 
+    let storedUser = null;
+    try { storedUser = JSON.parse(localStorage.getItem('redoubt-user')); } catch {}
+
     try {
       const resp = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ messages: conversationHistory }),
+        body: JSON.stringify({ messages: conversationHistory, email: storedUser?.email || undefined }),
       });
 
       let data;
@@ -1059,6 +1109,7 @@
 
       conversationHistory.push({ role: 'assistant', content: data.text });
       setAiMessageText(aiMsg, data.text);
+      if (data.usage) updateUsageBadge(data.usage);
     } catch (err) {
       conversationHistory.pop();
       setAiMessageText(aiMsg, "Couldn't get a real answer: " + err.message);
