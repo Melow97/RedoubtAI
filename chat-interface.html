@@ -988,18 +988,45 @@
     return msg;
   }
 
-  function sendMessage(){
+  let conversationHistory = [];
+
+  function setAiMessageText(msgEl, text){
+    msgEl.querySelector('.msg-body').innerHTML = '<div class="msg-role">Redoubt</div><p style="white-space:pre-wrap;"></p>';
+    msgEl.querySelector('.msg-body p').textContent = text;
+  }
+
+  async function sendMessage(){
     const text = ta.value.trim();
     if (!text) return;
     addMessage('user', text);
+    conversationHistory.push({ role: 'user', content: text });
     ta.value = '';
     ta.dispatchEvent(new Event('input'));
 
     const aiMsg = addMessage('ai', '<div class="thinking"><span class="thinking-dots"><span></span><span></span><span></span></span><span class="thinking-text mono">Thinking…</span></div>');
-    setTimeout(() => {
-      aiMsg.querySelector('.msg-body').innerHTML = '<div class="msg-role">Redoubt</div>' +
-        '<p>This preview isn\'t wired up to a live model yet — there\'s no backend running behind this demo, so there\'s nothing real to answer with. Once a backend calls a real model (with web search enabled for things like live scores), real answers will show up right here instead of this note.</p>';
-    }, 900);
+
+    try {
+      const resp = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ messages: conversationHistory }),
+      });
+
+      let data;
+      try {
+        data = await resp.json();
+      } catch {
+        throw new Error('No backend is running at /api/chat here (static hosts like GitHub Pages can\'t run it — deploy this repo to Vercel or Netlify instead).');
+      }
+
+      if (!resp.ok) throw new Error(data.error || ('Request failed with status ' + resp.status));
+
+      conversationHistory.push({ role: 'assistant', content: data.text });
+      setAiMessageText(aiMsg, data.text);
+    } catch (err) {
+      conversationHistory.pop();
+      setAiMessageText(aiMsg, "Couldn't get a real answer: " + err.message);
+    }
   }
   sendBtn.addEventListener('click', sendMessage);
 
