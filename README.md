@@ -54,6 +54,16 @@ The chat input's `+` button opens a small popover with:
 
 No live execution of offensive tooling (password cracking, unrestricted network scanning, SQL injection execution, site cloning). DNS/IP lookup, WHOIS, and SSL cert checking are public-data lookups and are fine to include; anything that executes against a target isn't.
 
+## Live preview (GitHub Pages)
+
+A workflow at `.github/workflows/pages.yml` publishes this site to GitHub Pages on every push. One-time setup (not something I can flip via git):
+
+1. Go to **Settings → Pages** in this repo.
+2. Under **Build and deployment → Source**, choose **GitHub Actions** (not "Deploy from a branch").
+3. Push anything (or re-run the "Deploy static site to GitHub Pages" workflow from the **Actions** tab) — the Actions tab will show a URL like `https://<owner>.github.io/<repo>/` once it finishes.
+
+After that, every push updates the same live URL automatically, and all the internal links (sign-in → chat → upgrade, etc.) work exactly as they do locally, since it's the same static files.
+
 ## Next steps
 
 1. Add `business.html` and `customization.html` to complete the nav
