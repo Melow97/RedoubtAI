@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redoubt — See the breach before it happens</title>
+<meta name="description" content="Predictive threat detection, automated incident response, code scanning, and phishing detection — powered by AI that reads your traffic like a signal, not a log.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B1220;
+    --bg:#FFFFFF;
+    --panel:#F6F7FA;
+    --panel-2:#EEF0F4;
+    --line: rgba(11,18,32,0.10);
+    --line-strong: rgba(11,18,32,0.18);
+    --cyan:#1C9A8D;
+    --amber:#C97F0F;
+    --red:#D93B3F;
+    --violet:#6B5ECF;
+    --coral:#E2603F;
+    --paper:#0B1220;
+    --paper-dim: rgba(11,18,32,0.65);
+    --paper-faint: rgba(11,18,32,0.42);
+    --radius: 14px;
+    --maxw: 1180px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--paper);
+    font-family:'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.55;
+  }
+  h1,h2,h3,.display{
+    font-family:'Space Grotesk', system-ui, sans-serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .mono{
+    font-family:'JetBrains Mono', monospace;
+    letter-spacing:0.02em;
+  }
+  a{color:inherit;}
+  img,svg{display:block; max-width:100%;}
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 28px;
+  }
+  section{position:relative;}
+
+  /* subtle grain/noise so the ink bg isn't flat */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none;
+    z-index:0;
+    opacity:0.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- nav ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(255,255,255,0.82);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .corner-badge{
+    position:fixed; top:18px; right:24px; z-index:60;
+    width:30px; height:30px;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0.85;
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 28px;
+    max-width:var(--maxw); margin:0 auto;
+  }
+  .logo{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700; font-size:19px;
+    letter-spacing:-0.01em;
+  }
+  .logo-mark{ width:22px; height:22px; }
+  .nav-links{ display:flex; gap:32px; align-items:center; }
+  .nav-links a{
+    text-decoration:none; color:var(--paper-dim);
+    font-size:14px; font-weight:500;
+    transition:color .15s ease;
+  }
+  .nav-links a:hover{ color:var(--paper); }
+  .nav-cta{
+    background:var(--cyan); color:#FFFFFF !important;
+    padding:9px 18px; border-radius:8px;
+    font-size:14px; font-weight:600;
+    text-decoration:none;
+  }
+  .nav-mobile-hide{ display:flex; }
+  @media (max-width:760px){ .nav-mobile-hide{ display:none; } }
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible, input:focus-visible{
+    outline:2px solid var(--cyan);
+    outline-offset:3px;
+    border-radius:4px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:96px 0 60px;
+    position:relative; z-index:1;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12px; color:var(--cyan);
+    text-transform:uppercase;
+    padding:6px 12px;
+    border:1px solid rgba(79,209,197,0.3);
+    border-radius:999px;
+    background:rgba(79,209,197,0.06);
+    margin-bottom:28px;
+  }
+  .eyebrow-dot{
+    width:6px; height:6px; border-radius:50%;
+    background:var(--cyan);
+    box-shadow:0 0 0 3px rgba(79,209,197,0.18);
+  }
+  .hero h1{
+    font-size:clamp(38px, 5.6vw, 68px);
+    line-height:1.04;
+    max-width:16ch;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--cyan);
+  }
+  .hero-sub{
+    margin-top:24px;
+    font-size:18px;
+    color:var(--paper-dim);
+    max-width:52ch;
+  }
+  .hero-actions{
+    margin-top:36px;
+    display:flex; gap:14px; flex-wrap:wrap;
+  }
+  .btn-primary{
+    background:var(--cyan); color:#FFFFFF;
+    border:none; padding:14px 26px;
+    border-radius:9px; font-weight:600; font-size:15px;
+    cursor:pointer; text-decoration:none;
+    display:inline-flex; align-items:center; gap:8px;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 8px 24px rgba(79,209,197,0.22); }
+  .btn-secondary{
+    background:transparent; color:var(--paper);
+    border:1px solid var(--line-strong);
+    padding:14px 26px; border-radius:9px;
+    font-weight:600; font-size:15px;
+    cursor:pointer; text-decoration:none;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .btn-secondary:hover{ border-color:var(--paper-dim); background:rgba(11,18,32,0.04); }
+
+  /* ---------- signal trace signature ---------- */
+  .trace-wrap{
+    margin-top:64px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:linear-gradient(180deg, var(--panel), var(--panel-2));
+    padding:0;
+    overflow:hidden;
+  }
+  .trace-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px;
+    border-bottom:1px solid var(--line);
+    font-size:12px; color:var(--paper-faint);
+  }
+  .trace-head .status{
+    display:flex; align-items:center; gap:8px;
+    color:var(--paper-dim);
+  }
+  .trace-svg-wrap{ position:relative; }
+  .trace-tag{
+    position:absolute;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--red);
+    background:rgba(229,72,77,0.1);
+    border:1px solid rgba(229,72,77,0.4);
+    padding:3px 8px; border-radius:6px;
+    top:22%; left:68%;
+    opacity:0;
+    animation: tagIn 6s ease-in-out infinite;
+  }
+  @keyframes tagIn{
+    0%, 46%{ opacity:0; transform:translateY(4px); }
+    52%, 70%{ opacity:1; transform:translateY(0); }
+    78%, 100%{ opacity:0; transform:translateY(0); }
+  }
+  .trace-legend{
+    display:flex; gap:22px; flex-wrap:wrap;
+    padding:16px 20px 20px;
+    font-size:12px; color:var(--paper-faint);
+  }
+  .trace-legend span{ display:inline-flex; align-items:center; gap:7px; }
+  .swatch{ width:9px; height:9px; border-radius:2px; }
+
+  /* ---------- section headers ---------- */
+  .section-pad{ padding:110px 0; }
+  .section-head{
+    max-width:640px;
+    margin-bottom:56px;
+  }
+  .section-eyebrow{
+    font-size:12px; color:var(--paper-faint);
+    text-transform:uppercase;
+    margin-bottom:14px;
+    display:block;
+  }
+  .section-head h2{
+    font-size:clamp(28px, 3.4vw, 40px);
+    line-height:1.14;
+  }
+  .section-head p{
+    margin-top:16px;
+    color:var(--paper-dim);
+    font-size:16px;
+    max-width:56ch;
+  }
+  .divider{
+    border:none; height:1px;
+    background:var(--line);
+    margin:0;
+  }
+
+  /* ---------- pillars ---------- */
+  .pillars{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  @media (max-width:820px){ .pillars{ grid-template-columns:1fr; } }
+  .pillar{
+    background:var(--panel);
+    padding:36px 32px;
+    transition:background .2s ease;
+  }
+  .pillar:hover{ background:var(--panel-2); }
+  .pillar-icon{
+    width:38px; height:38px;
+    margin-bottom:22px;
+  }
+  .pillar h3{
+    font-size:19px;
+    margin-bottom:10px;
+  }
+  .pillar p{
+    color:var(--paper-dim);
+    font-size:14.5px;
+    margin:0;
+  }
+  .pillar-sources{
+    margin-top:16px;
+    font-size:11px;
+    color:var(--paper-faint);
+  }
+
+  /* ---------- how it works ---------- */
+  .flow{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:0;
+    position:relative;
+  }
+  @media (max-width:900px){ .flow{ grid-template-columns:1fr; gap:28px; } }
+  .flow-step{
+    position:relative;
+    padding-right:28px;
+  }
+  .flow-step:not(:last-child)::after{
+    content:"";
+    position:absolute;
+    top:19px; right:-1px;
+    width:calc(100% - 10px);
+    height:1px;
+    background:repeating-linear-gradient(90deg, var(--line-strong) 0 6px, transparent 6px 12px);
+  }
+  @media (max-width:900px){ .flow-step:not(:last-child)::after{ display:none; } }
+  .flow-num{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--cyan);
+    width:38px; height:38px;
+    border:1px solid rgba(79,209,197,0.35);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:20px;
+    background:var(--bg);
+    position:relative; z-index:1;
+  }
+  .flow-step h3{ font-size:16px; margin-bottom:8px; }
+  .flow-step p{ color:var(--paper-dim); font-size:14px; margin:0; }
+
+  /* ---------- stat strip ---------- */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  @media (max-width:700px){ .stats{ grid-template-columns:1fr; } }
+  .stat{
+    padding:40px 32px;
+    border-right:1px solid var(--line);
+  }
+  .stat:last-child{ border-right:none; }
+  .stat-num{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:32px; font-weight:600;
+    color:var(--cyan);
+  }
+  .stat-label{
+    margin-top:6px; font-size:13px; color:var(--paper-faint);
+  }
+
+  /* ---------- pricing ---------- */
+  .pricing-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:20px;
+  }
+  @media (max-width:900px){ .pricing-grid{ grid-template-columns:1fr; } }
+  .price-card{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:32px 28px;
+    background:var(--panel);
+    display:flex; flex-direction:column;
+  }
+  .price-card.featured{
+    border-color:rgba(79,209,197,0.4);
+    background:linear-gradient(180deg, rgba(79,209,197,0.06), var(--panel) 60%);
+    position:relative;
+  }
+  .featured-badge{
+    position:absolute; top:-12px; left:28px;
+    background:var(--cyan); color:#FFFFFF;
+    font-size:11px; font-weight:600;
+    padding:4px 10px; border-radius:999px;
+  }
+  .price-tier{ font-size:14px; color:var(--paper-dim); margin-bottom:10px; }
+  .price-amount{ font-family:'Space Grotesk', sans-serif; font-size:34px; font-weight:600; }
+  .price-amount span{ font-size:14px; font-weight:400; color:var(--paper-faint); }
+  .price-desc{ margin:14px 0 22px; font-size:14px; color:var(--paper-dim); }
+  .price-features{
+    list-style:none; padding:0; margin:0 0 28px;
+    font-size:14px; color:var(--paper-dim);
+    display:flex; flex-direction:column; gap:11px;
+    flex-grow:1;
+  }
+  .price-features li{ display:flex; gap:10px; align-items:flex-start; }
+  .price-features svg{ flex-shrink:0; margin-top:3px; }
+
+  /* ---------- waitlist ---------- */
+  .waitlist{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:linear-gradient(135deg, var(--panel), var(--panel-2));
+    padding:56px 48px;
+    text-align:center;
+  }
+  @media (max-width:640px){ .waitlist{ padding:40px 24px; } }
+  .waitlist h2{ font-size:clamp(24px,3vw,32px); margin-bottom:12px; }
+  .waitlist p{ color:var(--paper-dim); max-width:46ch; margin:0 auto 32px; }
+  .waitlist-form{
+    display:flex; gap:10px; max-width:440px; margin:0 auto;
+    flex-wrap:wrap; justify-content:center;
+  }
+  .waitlist-form input{
+    flex:1; min-width:200px;
+    background:var(--panel-2);
+    border:1px solid var(--line-strong);
+    color:var(--paper);
+    padding:13px 16px;
+    border-radius:8px;
+    font-size:14px;
+    font-family:'Inter', sans-serif;
+  }
+  .waitlist-form input::placeholder{ color:var(--paper-faint); }
+  .waitlist-note{
+    margin-top:16px; font-size:12px; color:var(--paper-faint);
+  }
+  .waitlist-success{
+    display:none;
+    color:var(--cyan); font-size:14px;
+    font-family:'JetBrains Mono', monospace;
+  }
+
+  /* ---------------- technical highlights table ---------------- */
+  .highlights-head{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    flex-wrap:wrap; gap:20px;
+    margin-bottom:32px;
+  }
+  .datasheet-btn{
+    display:inline-flex; align-items:center; gap:8px;
+    background:transparent; color:var(--paper);
+    border:1px solid var(--line-strong);
+    padding:11px 18px; border-radius:8px;
+    font-size:13.5px; font-weight:500;
+    text-decoration:none; white-space:nowrap;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .datasheet-btn:hover{ border-color:var(--cyan); background:rgba(79,209,197,0.06); }
+
+  .htable{
+    width:100%; border-collapse:collapse;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .htable thead th{
+    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--paper-faint); font-weight:600;
+    background:var(--panel);
+    padding:14px 20px;
+    border-bottom:1px solid var(--line);
+  }
+  .htable tbody td{
+    padding:20px; vertical-align:top;
+    border-bottom:1px solid var(--line);
+    font-size:13.5px;
+  }
+  .htable tbody tr:last-child td{ border-bottom:none; }
+  .htable tbody tr{ transition:background .15s ease; }
+  .htable tbody tr:hover{ background:rgba(11,18,32,0.03); }
+  .htable .feat-name{
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:14.5px;
+    color:var(--paper); white-space:nowrap;
+  }
+  .htable .feat-detail{ color:var(--paper-dim); line-height:1.6; }
+  .htable .feat-benefit{ color:var(--cyan); line-height:1.6; }
+  @media (max-width:800px){
+    .htable thead{ display:none; }
+    .htable, .htable tbody, .htable tr, .htable td{ display:block; width:100%; }
+    .htable tbody tr{ padding:18px 20px; border-bottom:1px solid var(--line); }
+    .htable tbody td{ padding:6px 0; border:none; }
+    .htable .feat-benefit::before{ content:"→ "; }
+  }
+
+  /* ---------------- open source strip ---------------- */
+  .oss-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+  }
+  @media (max-width:800px){ .oss-grid{ grid-template-columns:1fr; } }
+  .oss-card{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:30px;
+    background:var(--panel);
+  }
+  .oss-card.core{ border-color:rgba(79,209,197,0.35); background:linear-gradient(160deg, rgba(79,209,197,0.05), var(--panel) 55%); }
+  .oss-tag{
+    display:inline-block; font-size:11px; font-weight:600; text-transform:uppercase;
+    padding:4px 10px; border-radius:999px; margin-bottom:16px;
+  }
+  .oss-tag.free{ background:rgba(79,209,197,0.14); color:var(--cyan); }
+  .oss-tag.cloud{ background:rgba(242,169,59,0.14); color:var(--amber); }
+  .oss-card h3{ font-size:19px; margin-bottom:10px; }
+  .oss-card p{ font-size:13.5px; color:var(--paper-dim); margin:0 0 18px; }
+  .oss-list{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:9px; }
+  .oss-list li{ font-size:13px; color:var(--paper-dim); display:flex; gap:9px; }
+  .oss-list li svg{ flex-shrink:0; margin-top:3px; }
+
+  /* ---------------- learning hub ---------------- */
+  .learn-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:20px;
+  }
+  @media (max-width:900px){ .learn-grid{ grid-template-columns:1fr; } }
+  .learn-card{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--panel);
+    padding:26px;
+    display:flex; flex-direction:column;
+  }
+  .learn-tag{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:11px; font-weight:600; text-transform:uppercase;
+    padding:4px 9px; border-radius:6px;
+    margin-bottom:16px; width:fit-content;
+  }
+  .learn-tag.prep{ background:rgba(79,209,197,0.14); color:var(--cyan); }
+  .learn-tag.partner{ background:rgba(242,169,59,0.14); color:var(--amber); }
+  .learn-card h3{ font-size:16.5px; margin-bottom:8px; }
+  .learn-card p{ font-size:13px; color:var(--paper-dim); margin:0 0 18px; flex-grow:1; }
+  .learn-meta{
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:12px; color:var(--paper-faint);
+    padding-top:14px; border-top:1px solid var(--line);
+  }
+  .learn-progress{
+    height:4px; border-radius:2px; background:var(--line-strong);
+    overflow:hidden; margin-top:10px;
+  }
+  .learn-progress-fill{ height:100%; background:var(--cyan); border-radius:2px; }
+  .learn-note{
+    margin-top:24px; font-size:12.5px; color:var(--paper-faint);
+    max-width:70ch; line-height:1.6;
+  }
+
+  footer{
+    border-top:1px solid var(--line);
+    background:var(--panel);
+    padding:64px 0 0;
+  }
+  .footer-top{
+    display:grid;
+    grid-template-columns: 1.6fr repeat(4, 1fr);
+    gap:32px;
+    padding-bottom:48px;
+    border-bottom:1px solid var(--line);
+  }
+  @media (max-width:900px){ .footer-top{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:560px){ .footer-top{ grid-template-columns:1fr; } }
+  .footer-brand .logo{ margin-bottom:14px; }
+  .footer-brand p{
+    font-size:13.5px; color:var(--paper-faint);
+    max-width:30ch; margin:0 0 20px;
+  }
+  .footer-social{ display:flex; gap:10px; }
+  .footer-social a{
+    width:32px; height:32px; border-radius:8px;
+    border:1px solid var(--line-strong);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--paper-dim);
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .footer-social a:hover{ border-color:var(--cyan); color:var(--cyan); }
+  .footer-col h4{
+    font-size:12px; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--paper-faint); font-weight:600; margin-bottom:16px;
+  }
+  .footer-col ul{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:11px; }
+  .footer-col a{
+    font-size:13.5px; color:var(--paper-dim);
+    text-decoration:none;
+    transition:color .15s ease;
+  }
+  .footer-col a:hover{ color:var(--cyan); }
+  .footer-badge{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:11px; color:var(--paper-faint);
+    background:rgba(11,18,32,0.05);
+    border:1px solid var(--line);
+    padding:3px 8px; border-radius:6px;
+    margin-left:8px;
+  }
+  .footer-bottom{
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:14px;
+    padding:22px 0;
+    font-size:12.5px; color:var(--paper-faint);
+  }
+  .footer-bottom-links{ display:flex; gap:22px; flex-wrap:wrap; }
+  .footer-bottom-links a{ color:var(--paper-faint); text-decoration:none; }
+  .footer-bottom-links a:hover{ color:var(--paper); }
+
+  /* reveal on scroll */
+  .reveal{
+    opacity:0; transform:translateY(14px);
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="corner-badge">
+  <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+    <path d="M16 2 L26 6 V14 C26 21.5 21.5 27 16 30 C10.5 27 6 21.5 6 14 V6 Z" stroke="#1C9A8D" stroke-width="1.6" stroke-linejoin="round" fill="rgba(28,154,141,0.06)"/>
+    <path d="M11.5 21 L16 9 L20.5 21" stroke="#1C9A8D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+
+<header>
+  <nav>
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 32 32" fill="none">
+        <path d="M16 2 L26 6 V14 C26 21.5 21.5 27 16 30 C10.5 27 6 21.5 6 14 V6 Z" stroke="#1C9A8D" stroke-width="1.6" stroke-linejoin="round" fill="rgba(79,209,197,0.07)"/>
+        <path d="M11.5 21 L16 9 L20.5 21" stroke="#1C9A8D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Redoubt
+    </div>
+    <div class="nav-links nav-mobile-hide">
+      <a href="#capabilities">Capabilities</a>
+      <a href="#technical">Technical</a>
+      <a href="#learn">Learning</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="business.html">Business</a>
+      <a href="welcome-screen.html" class="nav-cta">Sign in</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow mono"><span class="eyebrow-dot"></span>AI security copilot</span>
+      <h1>See the breach<br><em>before it happens.</em></h1>
+      <p class="hero-sub">
+        Redoubt is a chat-native AI copilot built for security teams — it reads your traffic, your code, and your
+        alert queue the way a senior analyst would, and talks you through what's actually worth your attention.
+      </p>
+      <div class="hero-actions">
+        <a href="#waitlist" class="btn-primary">
+          Get started free
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#capabilities" class="btn-secondary">See what it does</a>
+      </div>
+      <div class="mono" style="margin-top:22px; font-size:12px; color:var(--paper-faint); display:flex; align-items:center; gap:8px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M17.5 2h-11A2.5 2.5 0 004 4.5v15A2.5 2.5 0 006.5 22h11a2.5 2.5 0 002.5-2.5v-15A2.5 2.5 0 0017.5 2zM12 19a1 1 0 110-2 1 1 0 010 2z" stroke="#0B1220" stroke-opacity="0.5" stroke-width="1.3"/></svg>
+        Coming soon to iOS &amp; Android
+      </div>
+
+      <!-- Signature: live signal trace -->
+      <div class="trace-wrap reveal">
+        <div class="trace-head">
+          <span class="mono">net-traffic.eth0 · live</span>
+          <span class="status"><svg width="8" height="8" style="margin-right:2px"><circle cx="4" cy="4" r="4" fill="#1C9A8D"/></svg>monitoring</span>
+        </div>
+        <div class="trace-svg-wrap">
+          <span class="trace-tag">flagged in 41ms</span>
+          <svg viewBox="0 0 1000 180" width="100%" style="display:block">
+            <defs>
+              <linearGradient id="fadeMask" x1="0" x2="1">
+                <stop offset="0" stop-color="#1C9A8D" stop-opacity="0.5"/>
+                <stop offset="1" stop-color="#1C9A8D" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <!-- gridlines -->
+            <g stroke="rgba(11,18,32,0.08)">
+              <line x1="0" y1="45" x2="1000" y2="45"/>
+              <line x1="0" y1="90" x2="1000" y2="90"/>
+              <line x1="0" y1="135" x2="1000" y2="135"/>
+            </g>
+            <!-- baseline calm trace -->
+            <path d="M0,95 C40,85 80,105 120,95 C160,85 200,100 240,92 C280,86 320,98 360,94
+                     C400,88 440,96 480,90
+                     C500,20 520,160 540,90
+                     C580,84 620,100 660,92 C700,86 740,98 780,94 C820,88 860,96 900,90 C940,86 970,94 1000,90"
+              fill="none" stroke="#1C9A8D" stroke-width="2" stroke-linecap="round">
+              <animate attributeName="stroke" values="#1C9A8D;#1C9A8D;#D93B3F;#1C9A8D;#1C9A8D" dur="6s" keyTimes="0;0.44;0.5;0.56;1" repeatCount="indefinite"/>
+            </path>
+            <!-- scanning sweep -->
+            <rect x="0" y="0" width="120" height="180" fill="url(#fadeMask)">
+              <animate attributeName="x" from="-120" to="1000" dur="6s" repeatCount="indefinite"/>
+            </rect>
+            <!-- anomaly marker dot -->
+            <circle cx="510" cy="20" r="0" fill="#D93B3F">
+              <animate attributeName="r" values="0;0;5;5;0" keyTimes="0;0.44;0.5;0.7;1" dur="6s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.44;0.5;0.7;1" dur="6s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
+        <div class="trace-legend">
+          <span><span class="swatch" style="background:#1C9A8D"></span>baseline traffic</span>
+          <span><span class="swatch" style="background:#D93B3F"></span>flagged anomaly</span>
+          <span><span class="swatch" style="background:#C97F0F"></span>under review</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><hr class="divider"></div>
+
+  <!-- CAPABILITIES -->
+  <section class="section-pad" id="capabilities">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="section-eyebrow mono">Capabilities</span>
+        <h2>Four systems, one point of view.</h2>
+        <p>Each one watches a different surface. Together, they give you a single, coherent read on what's actually happening across your stack — not four separate dashboards to reconcile at 2am.</p>
+      </div>
+
+      <div class="pillars reveal">
+        <div class="pillar">
+          <svg class="pillar-icon" viewBox="0 0 38 38" fill="none">
+            <path d="M4 24 L11 24 L14 13 L20 30 L24 19 L34 19" stroke="#1C9A8D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3>Predictive threat detection</h3>
+          <p>Machine learning models trained on historical attack data and live network traffic patterns spot anomalies before they escalate into a breach — not after.</p>
+        </div>
+        <div class="pillar">
+          <svg class="pillar-icon" viewBox="0 0 38 38" fill="none">
+            <circle cx="19" cy="19" r="13" stroke="#C97F0F" stroke-width="2"/>
+            <path d="M19 12v7l5 3" stroke="#C97F0F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3>Automated incident response</h3>
+          <p>An AI agent triages and summarizes alerts as they arrive, so your SOC spends its attention on the handful that matter instead of drowning in the queue.</p>
+        </div>
+        <div class="pillar">
+          <svg class="pillar-icon" viewBox="0 0 38 38" fill="none">
+            <path d="M13 10 L6 19 L13 28 M25 10 L32 19 L25 28" stroke="#8C7FE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3>Code &amp; vulnerability scanning</h3>
+          <p>Context-aware models read source code the way a senior engineer would — finding real vulnerabilities and ranking patches by actual risk, not just pattern match.</p>
+        </div>
+        <div class="pillar">
+          <svg class="pillar-icon" viewBox="0 0 38 38" fill="none">
+            <rect x="5" y="10" width="28" height="18" rx="2" stroke="#F2795B" stroke-width="2"/>
+            <path d="M5 12 L19 22 L33 12" stroke="#F2795B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3>Phishing detection</h3>
+          <p>NLP models trace suspicious language, sender behavior, and domain patterns to catch phishing attempts that slide past legacy filters.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats reveal">
+    <div class="stat"><div class="stat-num">41ms</div><div class="stat-label mono">median anomaly flag time</div></div>
+    <div class="stat"><div class="stat-num">~70%</div><div class="stat-label mono">fewer low-value alerts reaching analysts</div></div>
+    <div class="stat"><div class="stat-num">24/7</div><div class="stat-label mono">continuous traffic &amp; code monitoring</div></div>
+  </section>
+
+  <div class="wrap"><hr class="divider"></div>
+
+  <!-- AI-NATIVE SOC -->
+  <section class="section-pad">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="section-eyebrow mono">One system, not a bolt-on</span>
+        <h2>Built with the response in mind, not added to it after.</h2>
+        <p>Most security tools are built first, then wired up to whatever team ends up running them. Redoubt was designed the other way around — the detection engine and the response workflow were built as one thing from day one, so nothing gets lost translating an alert into an action.</p>
+      </div>
+      <div class="pillars reveal">
+        <div class="pillar">
+          <svg class="pillar-icon" viewBox="0 0 38 38" fill="none">
+            <circle cx="19" cy="19" r="14" stroke="#1C9A8D" stroke-width="2"/>
+            <circle cx="19" cy="19" r="4" fill="#1C9A8D"/>
+          </svg>
+          <h3>Detection and response share context</h3>
+          <p>When the model flags something, it hands off everything it already knows — no re-explaining the situation to a separate tool or a separate team.</p>
+        </div>
+        <div class="pillar">
+          <svg class="pillar-icon" viewBox="0 0 38 38" fill="none">
+            <path d="M8 19 L16 27 L31 10" stroke="#C97F0F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3>Humans stay in the loop, not out of it</h3>
+          <p>Low-risk findings resolve automatically. Everything else reaches a person with the reasoning already attached — not just a score.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><hr class="divider"></div>
+
+  <!-- HOW IT WORKS -->
+  <section class="section-pad" id="how">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="section-eyebrow mono">How it works</span>
+        <h2>From raw signal to resolved incident.</h2>
+        <p>One pipeline, four stages. Every alert you see has already been through this before it reaches a human.</p>
+      </div>
+      <div class="flow reveal">
+        <div class="flow-step">
+          <div class="flow-num mono">01</div>
+          <h3>Ingest</h3>
+          <p>Network traffic, logs, source code, and inbound email are streamed in continuously, no agents to babysit.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num mono">02</div>
+          <h3>Analyze</h3>
+          <p>Models trained on historical attack patterns compare live behavior against what "normal" looks like for your environment.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num mono">03</div>
+          <h3>Detect</h3>
+          <p>Deviations are scored, ranked, and summarized in plain language — with the reasoning attached, not a black-box score.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num mono">04</div>
+          <h3>Respond</h3>
+          <p>Low-risk items are handled automatically. Everything else lands in front of your team, already triaged.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><hr class="divider"></div>
+
+  <!-- TECHNICAL HIGHLIGHTS -->
+  <section class="section-pad" id="technical">
+    <div class="wrap">
+      <div class="highlights-head reveal">
+        <div class="section-head" style="margin-bottom:0;">
+          <span class="section-eyebrow mono">For technical teams</span>
+          <h2>Built for observability, not just alerts.</h2>
+          <p>Every finding, every automated action, every model call — traceable, auditable, and yours to inspect.</p>
+        </div>
+        <a href="#waitlist" class="datasheet-btn">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M3.5 5.5L7 9l3.5-3.5M2 12h10" stroke="#0B1220" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Get the datasheet
+        </a>
+      </div>
+
+      <div class="reveal" style="overflow-x:auto;">
+        <table class="htable">
+          <thead>
+            <tr><th>Feature</th><th>Details</th><th>Benefit</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="feat-name">Agent traceability</td>
+              <td class="feat-detail">Every action Redoubt's agent takes — a query, a triage decision, a drafted report — is logged as a replayable step, not a black-box output.</td>
+              <td class="feat-benefit">Full observability into what your AI actually did, end to end.</td>
+            </tr>
+            <tr>
+              <td class="feat-name">Self-hosted core</td>
+              <td class="feat-detail">The detection engine and chat runtime are open source and deployable entirely on your own infrastructure.</td>
+              <td class="feat-benefit">Complete data sovereignty — nothing leaves your network unless you choose it to.</td>
+            </tr>
+            <tr>
+              <td class="feat-name">MCP-compatible connectors</td>
+              <td class="feat-detail">Built on the open Model Context Protocol standard used across the current generation of AI assistants.</td>
+              <td class="feat-benefit">One integration layer, compatible with the same connector ecosystem as other major AI platforms.</td>
+            </tr>
+            <tr>
+              <td class="feat-name">Community detection rules</td>
+              <td class="feat-detail">Threat and phishing detection patterns are published, versioned, and reviewed in the open, like a package registry.</td>
+              <td class="feat-benefit">Benefit from a shared pattern library instead of starting from zero.</td>
+            </tr>
+            <tr>
+              <td class="feat-name">Role-based access &amp; audit trail</td>
+              <td class="feat-detail">Fine-grained permissions per environment, plus an immutable log of every query and action taken.</td>
+              <td class="feat-benefit">Meet internal compliance requirements without bolting on separate tooling.</td>
+            </tr>
+            <tr>
+              <td class="feat-name">Offline / air-gapped mode</td>
+              <td class="feat-detail">Run detection and chat models fully disconnected from the internet, for classified or restricted environments.</td>
+              <td class="feat-benefit">Works even where cloud connectivity isn't an option.</td>
+            </tr>
+            <tr>
+              <td class="feat-name">Managed cloud tier</td>
+              <td class="feat-detail">An optional hosted version with support and uptime SLAs, for teams that don't want to run their own infrastructure.</td>
+              <td class="feat-benefit">An enterprise on-ramp, without needing an ops team on day one.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><hr class="divider"></div>
+
+  <!-- OPEN SOURCE -->
+  <section class="section-pad">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="section-eyebrow mono">Open by default</span>
+        <h2>Free for individuals. Ready for business.</h2>
+        <p>The core engine is open source — inspect it, self-host it, extend it. Businesses that want it managed and supported can layer that on top, without ever touching a different product.</p>
+      </div>
+
+      <div class="oss-grid reveal">
+        <div class="oss-card core">
+          <span class="oss-tag free">Free &amp; open source</span>
+          <h3>Redoubt Core</h3>
+          <p>The full detection engine, chat copilot, and connector framework — self-hosted, no feature gate, no seat limit.</p>
+          <ul class="oss-list">
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>MIT-licensed source, hosted on GitHub</li>
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Deploy on your own servers or air-gapped</li>
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Community detection rules included</li>
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Bring your own model or run local inference</li>
+          </ul>
+        </div>
+        <div class="oss-card">
+          <span class="oss-tag cloud">Managed cloud</span>
+          <h3>Redoubt Cloud</h3>
+          <p>Same engine, hosted and supported — for teams that want an SLA, managed upgrades, and a support line instead of an ops burden.</p>
+          <ul class="oss-list">
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#C97F0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Uptime SLA and priority support</li>
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#C97F0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Managed updates, no infra to maintain</li>
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#C97F0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>SSO, org-wide billing, admin console</li>
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#C97F0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Same open core underneath — never locked in</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><hr class="divider"></div>
+
+  <!-- LEARNING HUB -->
+  <section class="section-pad" id="learn">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="section-eyebrow mono">Pro perk</span>
+        <h2>Learn while you defend.</h2>
+        <p>Redoubt notices the gaps in what you ask about, then points you toward the certification or course that actually closes them — instead of a generic course catalog nobody browses.</p>
+      </div>
+
+      <div class="learn-grid reveal">
+        <div class="learn-card">
+          <span class="learn-tag prep">Cert prep</span>
+          <h3>RHCSA Exam Track</h3>
+          <p>Original prep content aligned to Red Hat's public RHCSA exam objectives — command line, storage, users, SELinux, and networking fundamentals.</p>
+          <div class="learn-meta">
+            <span>42 lessons · self-paced</span>
+            <span class="mono">68%</span>
+          </div>
+          <div class="learn-progress"><div class="learn-progress-fill" style="width:68%"></div></div>
+        </div>
+
+        <div class="learn-card">
+          <span class="learn-tag prep">Cert prep</span>
+          <h3>RHCE Exam Track</h3>
+          <p>Builds on RHCSA — Ansible automation, advanced networking, and system roles, mapped to the current public exam objectives.</p>
+          <div class="learn-meta">
+            <span>36 lessons · self-paced</span>
+            <span class="mono">Not started</span>
+          </div>
+          <div class="learn-progress"><div class="learn-progress-fill" style="width:0%"></div></div>
+        </div>
+
+        <div class="learn-card">
+          <span class="learn-tag partner">Partner course</span>
+          <h3>Practical Ethical Hacking</h3>
+          <p>Recommended because your last three chats touched on network reconnaissance — a highly-rated course from Udemy's security catalog.</p>
+          <div class="learn-meta">
+            <span>Udemy · 4.7★ · 18hrs</span>
+            <span class="mono">→</span>
+          </div>
+        </div>
+
+        <div class="learn-card">
+          <span class="learn-tag prep">Guide</span>
+          <h3>Bug Bounty Hunting 101</h3>
+          <p>How to get started on HackerOne and Bugcrowd — scope reading, recon methodology, writing reports that actually get triaged and paid.</p>
+          <div class="learn-meta">
+            <span>12 lessons · self-paced</span>
+            <span class="mono">Not started</span>
+          </div>
+          <div class="learn-progress"><div class="learn-progress-fill" style="width:0%"></div></div>
+        </div>
+
+        <div class="learn-card">
+          <span class="learn-tag prep">Guide</span>
+          <h3>Cipher &amp; Cryptography Challenges</h3>
+          <p>CTF-style puzzles — classical ciphers, XOR, hashing, and encoding — with Redoubt as a hint-giver rather than an answer key.</p>
+          <div class="learn-meta">
+            <span>24 challenges · self-paced</span>
+            <span class="mono">3/24</span>
+          </div>
+          <div class="learn-progress"><div class="learn-progress-fill" style="width:12%"></div></div>
+        </div>
+      </div>
+
+      <p class="learn-note">
+        RHCSA/RHCE prep tracks and the bug bounty &amp; cipher guides are original educational content — Redoubt is not an official Red Hat training partner, and completing these tracks doesn't replace an official exam. Partner course recommendations link out to Udemy via standard affiliate links. These guides teach methodology and concepts; Redoubt does not include built-in exploitation tooling (e.g. Metasploit, automated SQL injection) that executes against live targets.
+      </p>
+    </div>
+  </section>
+
+  <div class="wrap"><hr class="divider"></div>
+
+  <!-- PRICING -->
+  <section class="section-pad" id="pricing">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="section-eyebrow mono">Pricing</span>
+        <h2>Start where you are.</h2>
+        <p>Every tier includes the same detection engine. What changes is scale, seats, and how much you want automated.</p>
+      </div>
+
+      <div class="pricing-grid reveal">
+        <div class="price-card">
+          <div class="price-tier">Free</div>
+          <div class="price-amount">€0<span>/mo</span></div>
+          <p class="price-desc">More room to explore than most AI chat tools give new users.</p>
+          <ul class="price-features">
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Generous daily message allowance</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>1 monitored environment</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Phishing &amp; anomaly alerts</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>7-day alert history</li>
+          </ul>
+          <a href="#waitlist" class="btn-secondary" style="text-align:center">Start free</a>
+        </div>
+        <div class="price-card featured">
+          <span class="featured-badge">Free for 30 days</span>
+          <div class="price-tier">Pro</div>
+          <div class="price-amount">€12<span>/mo</span></div>
+          <p class="price-desc">First month free, then €12/mo. Cancel any time before you're charged.</p>
+          <ul class="price-features">
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited chat with your copilot</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Up to 10 monitored environments</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Automated incident response</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Code &amp; vulnerability scanning</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>90-day alert history</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Learning Hub: cert prep tracks + course recs</li>
+          </ul>
+          <a href="welcome-screen.html" class="btn-primary" style="text-align:center; justify-content:center">Start free trial</a>
+        </div>
+        <div class="price-card">
+          <div class="price-tier">Enterprise</div>
+          <div class="price-amount">Custom</div>
+          <p class="price-desc">For orgs with compliance and scale needs.</p>
+          <ul class="price-features">
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited environments</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>SSO, audit logs, SLAs</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Dedicated onboarding</li>
+          </ul>
+          <a href="#waitlist" class="btn-secondary" style="text-align:center">Talk to us</a>
+        </div>
+      </div>
+      <p class="mono" style="margin-top:20px; font-size:12px; color:var(--paper-faint);">Card required to start the Pro trial — a basic fraud-prevention check, not a charge. You'll be billed €12 automatically when the 30 days end, and get a reminder 3 days before.</p>
+    </div>
+  </section>
+
+  <!-- WAITLIST -->
+  <section class="section-pad" id="waitlist" style="padding-top:0">
+    <div class="wrap">
+      <div class="waitlist reveal">
+        <h2>Be first to see it live.</h2>
+        <p>We're onboarding a small group of early teams before general availability. Leave your email and we'll reach out.</p>
+        <form class="waitlist-form" id="waitlistForm">
+          <label for="email" style="position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);">Email address</label>
+          <input type="email" id="email" placeholder="you@company.com" required>
+          <button type="submit" class="btn-primary">Request access</button>
+        </form>
+        <div class="waitlist-success mono" id="waitlistSuccess">✓ You're on the list. We'll be in touch.</div>
+        <div class="waitlist-note">No spam. No card required. Unsubscribe any time.</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">
+          <svg class="logo-mark" viewBox="0 0 32 32" fill="none">
+            <path d="M16 2 L26 6 V14 C26 21.5 21.5 27 16 30 C10.5 27 6 21.5 6 14 V6 Z" stroke="#1C9A8D" stroke-width="1.6" stroke-linejoin="round" fill="rgba(79,209,197,0.07)"/>
+            <path d="M11.5 21 L16 9 L20.5 21" stroke="#1C9A8D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Redoubt
+        </div>
+        <p>An AI security copilot that watches your traffic, your code, and your alerts — and talks you through what's actually worth your attention.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="X / Twitter"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23.3 22h-7l-5.5-7.2L4.5 22H1.4l8.1-9.3L1 2h7.2l5 6.6L18.9 2z"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM.5 8.5h9V23h-9V8.5zM8.5 8.5h8.6v2h.1c1.2-2.1 4.1-2.2 5.7-.6 1.6 1.7 1.6 3.8 1.6 5.9V23h-9v-6.1c0-1.5 0-3.4-2.1-3.4s-2.4 1.6-2.4 3.3V23h-9V8.5H8.5z"/></svg></a>
+          <a href="#" aria-label="GitHub"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.9 5.3.9 11.6c0 5 3.2 9.2 7.7 10.7.6.1.8-.2.8-.6v-2.2c-3.1.7-3.8-1.5-3.8-1.5-.5-1.3-1.2-1.7-1.2-1.7-1-.7.1-.6.1-.6 1.1.1 1.7 1.1 1.7 1.1 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.5-.3-5.1-1.2-5.1-5.5 0-1.2.4-2.2 1.1-3-.1-.3-.5-1.5.1-3.2 0 0 .9-.3 3 1.1a10.4 10.4 0 015.5 0c2.1-1.4 3-1.1 3-1.1.6 1.7.2 2.9.1 3.2.7.8 1.1 1.8 1.1 3 0 4.3-2.6 5.2-5.1 5.5.4.4.8 1.1.8 2.2v3.3c0 .4.2.7.8.6 4.5-1.5 7.7-5.7 7.7-10.7C23.1 5.3 18.3.5 12 .5z"/></svg></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#capabilities">Predictive threat detection</a></li>
+          <li><a href="#capabilities">Automated incident response</a></li>
+          <li><a href="#capabilities">Code &amp; vulnerability scanning</a></li>
+          <li><a href="#capabilities">Phishing detection</a></li>
+          <li><a href="#capabilities">DNS &amp; IP lookup</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Integrations</h4>
+        <ul>
+          <li><a href="#">GitHub &amp; GitLab</a></li>
+          <li><a href="#">Slack</a></li>
+          <li><a href="#">Salesforce CRM</a></li>
+          <li><a href="#">Google Calendar</a></li>
+          <li><a href="#">Jira &amp; issue trackers</a></li>
+          <li><a href="#">All integrations</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">API reference</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Changelog</a></li>
+          <li><a href="#">Status</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Security &amp; trust</a></li>
+          <li><a href="#">Privacy policy</a></li>
+          <li><a href="#">Terms of service</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Redoubt. Built for teams who'd rather catch it early.
+        <span class="footer-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><rect x="6" y="2" width="12" height="20" rx="3" stroke="#8B94AA" stroke-width="1.6"/></svg>
+          iOS &amp; Android — coming soon
+        </span>
+      </span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Dublin, IE</a>
+        <a href="#">English</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // waitlist form (client-side only — wire to a real backend later)
+  document.getElementById('waitlistForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const form = e.target;
+    const success = document.getElementById('waitlistSuccess');
+    form.style.display = 'none';
+    success.style.display = 'block';
+  });
+
+  // scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
