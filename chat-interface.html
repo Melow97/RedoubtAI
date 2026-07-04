@@ -91,6 +91,53 @@
   }
   .sb-nav-item.active svg{ opacity:1; }
   .sb-nav-divider{ height:1px; background:var(--line); margin:12px 0; }
+  .sb-nav-item.customize-trigger{ width:100%; background:transparent; border:none; text-align:left; font-family:inherit; }
+  .sb-nav-item .chev{ transition:transform .15s ease; flex-shrink:0; }
+  .sb-nav-item[aria-expanded="true"] .chev{ transform:rotate(180deg); }
+
+  .customize-panel{
+    display:none; flex-direction:column; gap:2px;
+    background:var(--panel-2);
+    border:1px solid var(--line-strong);
+    border-radius:10px;
+    padding:10px 10px 12px;
+    margin:2px 0 8px;
+  }
+  .customize-panel.open{ display:flex; }
+  .customize-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:5px 2px;
+    font-size:12.5px; color:var(--paper-dim);
+  }
+  .customize-more-btn{
+    display:flex; align-items:center; gap:5px;
+    background:transparent; border:none; color:var(--cyan);
+    font-size:12px; font-weight:600; padding:8px 2px 2px;
+    width:fit-content; font-family:inherit;
+  }
+  .customize-more-btn .chev{ transition:transform .15s ease; }
+  .customize-more-btn.open .chev{ transform:rotate(180deg); }
+  .customize-more{ display:none; flex-direction:column; margin-top:6px; padding-top:10px; border-top:1px solid var(--line-strong); }
+  .customize-more.open{ display:flex; }
+  .customize-label{ font-size:10.5px; color:var(--paper-faint); font-weight:600; text-transform:uppercase; letter-spacing:0.05em; }
+  .accent-swatches{ display:flex; gap:8px; margin-top:6px; }
+  .accent-swatch{ width:22px; height:22px; border-radius:50%; border:2px solid transparent; cursor:pointer; padding:0; }
+  .accent-swatch.selected{ border-color:var(--paper); box-shadow:0 0 0 2px var(--panel-2); }
+  .customize-add-form{ display:flex; flex-direction:column; gap:6px; margin-top:6px; }
+  .customize-add-form input{
+    background:var(--panel-3); border:1px solid var(--line-strong); color:var(--paper);
+    padding:7px 9px; border-radius:7px; font-size:12.5px; font-family:'Inter', sans-serif;
+  }
+  .customize-add-form input::placeholder{ color:var(--paper-faint); }
+  .customize-add-btn{ background:var(--cyan); color:#fff; border:none; border-radius:7px; padding:7px; font-size:12.5px; font-weight:600; }
+  .customize-custom-links{ display:flex; flex-direction:column; gap:1px; margin-top:8px; }
+  .custom-link-row{ display:flex; align-items:center; gap:8px; padding:5px 2px; font-size:12.5px; color:var(--paper-dim); }
+  .custom-link-row .cl-name{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .custom-link-row .cl-remove{
+    background:transparent; border:none; color:var(--paper-faint); cursor:pointer;
+    width:16px; height:16px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .custom-link-row .cl-remove:hover{ color:var(--red); }
 
   .sb-section-label{
     font-size:11px; color:var(--paper-faint);
@@ -128,7 +175,17 @@
     flex-shrink:0;
   }
   .sb-user-name{ font-size:13px; font-weight:500; }
-  .sb-user-plan{ font-size:11px; color:var(--paper-faint); }
+  .sb-user-plan-row{ display:flex; align-items:center; gap:6px; margin-top:3px; }
+  .pro-badge{
+    display:inline-flex; align-items:center; gap:3px;
+    font-size:10px; font-weight:700; letter-spacing:0.03em;
+    color:#6B4400;
+    background:linear-gradient(135deg, #F5D28E, #E0A93D);
+    border:1px solid rgba(201,127,15,0.6);
+    box-shadow:0 1px 3px rgba(201,127,15,0.35);
+    padding:2.5px 7px; border-radius:6px;
+  }
+  .sb-user-plan-note{ font-size:11px; color:var(--paper-faint); }
 
   /* ---------------- main ---------------- */
   .main{ display:flex; flex-direction:column; height:100vh; min-width:0; }
@@ -148,6 +205,51 @@
     font-size:13px; color:var(--paper-dim);
   }
   .env-pill .swatch{ width:7px; height:7px; border-radius:50%; background:var(--cyan); }
+
+  .model-pill-wrap{ position:relative; }
+  .model-pill{
+    display:flex; align-items:center; gap:7px;
+    background:var(--panel); border:1px solid var(--line-strong);
+    padding:7px 12px; border-radius:8px; font-size:13px; color:var(--paper-dim);
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .model-pill:hover{ border-color:var(--paper-faint); background:var(--panel-2); }
+  .model-pill .chev{ opacity:0.7; }
+  .model-pill-dot{ width:7px; height:7px; border-radius:50%; background:var(--cyan); flex-shrink:0; }
+
+  .model-popover{
+    position:absolute; top:calc(100% + 8px); left:0;
+    width:310px;
+    background:var(--panel); border:1px solid var(--line-strong); border-radius:14px;
+    box-shadow:0 16px 40px rgba(11,18,32,0.16);
+    padding:14px; display:none; flex-direction:column; z-index:90;
+  }
+  .model-popover.open{ display:flex; }
+  .model-section-label{ font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--paper-faint); font-weight:600; margin-bottom:8px; }
+
+  .effort-toggle{ display:flex; background:var(--panel-2); border:1px solid var(--line-strong); border-radius:9px; padding:3px; gap:3px; }
+  .effort-opt{ flex:1; background:transparent; border:none; padding:7px; border-radius:7px; font-size:12.5px; font-weight:600; color:var(--paper-dim); font-family:inherit; }
+  .effort-opt.active{ background:var(--bg); color:var(--paper); box-shadow:0 1px 3px rgba(11,18,32,0.12); }
+
+  .model-option{
+    display:flex; align-items:flex-start; gap:10px;
+    width:100%; text-align:left; background:transparent; border:1px solid transparent;
+    border-radius:10px; padding:10px; margin-bottom:4px; font-family:inherit;
+  }
+  .model-option:hover{ background:var(--panel-3); }
+  .model-option.selected{ background:rgba(79,209,197,0.08); border-color:rgba(79,209,197,0.35); }
+  .mo-body{ flex:1; min-width:0; }
+  .mo-title-row{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .mo-title{ font-size:13.5px; font-weight:600; color:var(--paper); }
+  .mo-tag{ font-size:9.5px; font-weight:700; text-transform:uppercase; padding:2px 6px; border-radius:5px; letter-spacing:0.03em; }
+  .mo-tag.free{ background:rgba(79,209,197,0.14); color:var(--cyan); }
+  .mo-tag.pro{ background:linear-gradient(135deg, #F5D28E, #E0A93D); color:#6B4400; }
+  .mo-tag.experimental{ background:rgba(107,94,207,0.14); color:#6B5ECF; }
+  .mo-desc{ display:block; font-size:12px; color:var(--paper-faint); margin-top:3px; line-height:1.5; }
+  .mo-check{ flex-shrink:0; width:15px; height:15px; margin-top:2px; opacity:0; }
+  .model-option.selected .mo-check{ opacity:1; }
+  .model-footnote{ margin-top:6px; padding-top:10px; border-top:1px solid var(--line); font-size:11px; color:var(--paper-faint); line-height:1.6; }
+
   .topbar-right{ display:flex; align-items:center; gap:10px; }
   .icon-btn{
     width:34px; height:34px;
@@ -461,37 +563,86 @@
     </button>
 
     <div class="sb-nav">
-      <a href="customization.html" class="sb-nav-item" style="text-decoration:none;">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.3" stroke="#B9C1D4" stroke-width="1.3"/><path d="M8 1.5v2M8 12.5v2M14.5 8h-2M3.5 8h-2M12.7 3.3l-1.4 1.4M4.7 11.3l-1.4 1.4M12.7 12.7l-1.4-1.4M4.7 4.7L3.3 3.3" stroke="#B9C1D4" stroke-width="1.3" stroke-linecap="round"/></svg>
-        Customization
-      </a>
-      <div class="sb-nav-item">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="5" cy="5" r="2" stroke="#B9C1D4" stroke-width="1.3"/><circle cx="11" cy="5" r="2" stroke="#B9C1D4" stroke-width="1.3"/><circle cx="5" cy="11" r="2" stroke="#B9C1D4" stroke-width="1.3"/><circle cx="11" cy="11" r="2" stroke="#B9C1D4" stroke-width="1.3"/></svg>
+      <button type="button" class="sb-nav-item customize-trigger" id="customizeToggle" aria-expanded="false" aria-controls="customizePanel">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h6M11 4h3M2 8h2M6 8h8M2 12h8M12 12h2" stroke="#5B6472" stroke-width="1.3" stroke-linecap="round"/><circle cx="8.5" cy="4" r="1.6" fill="var(--panel)" stroke="#5B6472" stroke-width="1.3"/><circle cx="4" cy="8" r="1.6" fill="var(--panel)" stroke="#5B6472" stroke-width="1.3"/><circle cx="10" cy="12" r="1.6" fill="var(--panel)" stroke="#5B6472" stroke-width="1.3"/></svg>
+        <span style="flex:1;">Customize</span>
+        <svg class="chev" width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2.5 4l3 3 3-3" stroke="#5B6472" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="customize-panel" id="customizePanel">
+        <div class="customize-row">
+          <span>Show environments</span>
+          <span class="tools-mini-toggle on" id="toggleEnvironments"><span class="knob"></span></span>
+        </div>
+        <div class="customize-row">
+          <span>Show recent chats</span>
+          <span class="tools-mini-toggle on" id="toggleRecent"><span class="knob"></span></span>
+        </div>
+        <div class="customize-row">
+          <span>Show Integrations link</span>
+          <span class="tools-mini-toggle on" id="toggleIntegrations"><span class="knob"></span></span>
+        </div>
+        <div class="customize-row">
+          <span>Show Apps link</span>
+          <span class="tools-mini-toggle on" id="toggleApps"><span class="knob"></span></span>
+        </div>
+
+        <button type="button" class="customize-more-btn" id="customizeMoreBtn" aria-expanded="false">
+          <span>More</span>
+          <svg class="chev" width="10" height="10" viewBox="0 0 11 11" fill="none"><path d="M2.5 4l3 3 3-3" stroke="var(--cyan)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+        <div class="customize-more" id="customizeMore">
+          <span class="customize-label">Accent color</span>
+          <div class="accent-swatches" id="accentSwatches">
+            <button type="button" class="accent-swatch selected" data-accent="#1C9A8D" style="background:#1C9A8D" aria-label="Cyan"></button>
+            <button type="button" class="accent-swatch" data-accent="#6B5ECF" style="background:#6B5ECF" aria-label="Violet"></button>
+            <button type="button" class="accent-swatch" data-accent="#C97F0F" style="background:#C97F0F" aria-label="Amber"></button>
+            <button type="button" class="accent-swatch" data-accent="#E2603F" style="background:#E2603F" aria-label="Coral"></button>
+          </div>
+
+          <span class="customize-label" style="margin-top:14px;">Add your own link</span>
+          <form class="customize-add-form" id="customizeAddForm">
+            <input type="text" id="customLinkLabel" placeholder="Label (e.g. Runbooks)" required>
+            <input type="url" id="customLinkUrl" placeholder="https://…" required>
+            <button type="submit" class="customize-add-btn">+ Add to sidebar</button>
+          </form>
+          <div class="customize-custom-links" id="customLinksList"></div>
+        </div>
+      </div>
+
+      <div class="sb-nav-item" id="navIntegrations">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="5" cy="5" r="2" stroke="#5B6472" stroke-width="1.3"/><circle cx="11" cy="5" r="2" stroke="#5B6472" stroke-width="1.3"/><circle cx="5" cy="11" r="2" stroke="#5B6472" stroke-width="1.3"/><circle cx="11" cy="11" r="2" stroke="#5B6472" stroke-width="1.3"/></svg>
         Integrations
       </div>
-      <div class="sb-nav-item">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="#B9C1D4" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="#B9C1D4" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="#B9C1D4" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="#B9C1D4" stroke-width="1.3"/></svg>
+      <div class="sb-nav-item" id="navApps">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="#5B6472" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="#5B6472" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="#5B6472" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="#5B6472" stroke-width="1.3"/></svg>
         Apps
       </div>
       <a href="chat-interface.html" class="sb-nav-item active" style="text-decoration:none;">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4a2 2 0 012-2h8a2 2 0 012 2v6a2 2 0 01-2 2H6l-3 3v-3H4a2 2 0 01-2-2V4z" stroke="#1C9A8D" stroke-width="1.3" stroke-linejoin="round"/></svg>
         Chat
       </a>
+      <div id="customNavItems"></div>
     </div>
     <div class="sb-nav-divider"></div>
 
-    <div class="sb-section-label">Environments</div>
-    <div class="sb-item active"><span class="dot" style="background:#1C9A8D"></span>prod-cluster-eu</div>
-    <div class="sb-item"><span class="dot" style="background:#C97F0F"></span>staging</div>
-    <div class="sb-item"><span class="dot" style="background:#1C9A8D"></span>customer-api</div>
+    <div id="sectionEnvironments">
+      <div class="sb-section-label">Environments</div>
+      <div class="sb-item active"><span class="dot" style="background:#1C9A8D"></span>prod-cluster-eu</div>
+      <div class="sb-item"><span class="dot" style="background:#C97F0F"></span>staging</div>
+      <div class="sb-item"><span class="dot" style="background:#1C9A8D"></span>customer-api</div>
+    </div>
 
-    <div class="sb-section-label">Recent</div>
-    <div class="sb-convos">
-      <div class="sb-item">Unusual outbound traffic spike</div>
-      <div class="sb-item">Review PR #482 auth middleware</div>
-      <div class="sb-item">Phishing report — finance team</div>
-      <div class="sb-item">Weekly vuln digest summary</div>
-      <div class="sb-item">SSL cert renewal reminder</div>
+    <div id="sectionRecent" style="display:flex; flex-direction:column; flex:1; min-height:0;">
+      <div class="sb-section-label">Recent</div>
+      <div class="sb-convos">
+        <div class="sb-item">Unusual outbound traffic spike</div>
+        <div class="sb-item">Review PR #482 auth middleware</div>
+        <div class="sb-item">Phishing report — finance team</div>
+        <div class="sb-item">Weekly vuln digest summary</div>
+        <div class="sb-item">SSL cert renewal reminder</div>
+      </div>
     </div>
 
     <div class="sb-bottom">
@@ -499,7 +650,10 @@
         <div class="avatar">M</div>
         <div>
           <div class="sb-user-name">Mel</div>
-          <a href="upgrade-plans.html" class="sb-user-plan mono" style="text-decoration:none;">Pro · trial · 21 days left</a>
+          <a href="upgrade-plans.html" class="sb-user-plan-row" style="text-decoration:none;">
+            <span class="pro-badge mono">★ PRO</span>
+            <span class="sb-user-plan-note mono">trial · 21 days left</span>
+          </a>
         </div>
       </div>
     </div>
@@ -510,17 +664,61 @@
     <div class="topbar">
       <div class="topbar-left">
         <div class="env-pill"><span class="swatch"></span>prod-cluster-eu</div>
+
+        <div class="model-pill-wrap">
+          <button class="model-pill" id="modelPillBtn" aria-haspopup="true" aria-expanded="false">
+            <span class="model-pill-dot" id="modelPillDot"></span>
+            <span id="modelPillLabel">Redoubt Standard</span>
+            <svg class="chev" width="10" height="10" viewBox="0 0 11 11" fill="none"><path d="M2.5 4l3 3 3-3" stroke="#5B6472" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+
+          <div class="model-popover" id="modelPopover">
+            <div class="model-section-label">Effort</div>
+            <div class="effort-toggle" id="effortToggle">
+              <button type="button" class="effort-opt active" data-effort="faster">Faster</button>
+              <button type="button" class="effort-opt" data-effort="smarter">Smarter</button>
+            </div>
+
+            <div class="model-section-label" style="margin-top:16px;">Model</div>
+
+            <button type="button" class="model-option selected" data-model="standard" data-color="#1C9A8D">
+              <span class="mo-body">
+                <span class="mo-title-row"><span class="mo-title">Redoubt Standard</span><span class="mo-tag free">Free</span></span>
+                <span class="mo-desc">Fast everyday triage, lookups, and quick Q&amp;A.</span>
+              </span>
+              <span class="mo-check"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </button>
+
+            <button type="button" class="model-option" data-model="sentinel" data-color="#6B5ECF">
+              <span class="mo-body">
+                <span class="mo-title-row"><span class="mo-title">Redoubt Sentinel</span><span class="mo-tag pro">Pro</span></span>
+                <span class="mo-desc">Smarter reasoning for deep investigations, code review, and fixing broken sites.</span>
+              </span>
+              <span class="mo-check"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </button>
+
+            <button type="button" class="model-option" data-model="apex" data-color="#E0A93D">
+              <span class="mo-body">
+                <span class="mo-title-row"><span class="mo-title">Redoubt Apex</span><span class="mo-tag pro">Pro</span><span class="mo-tag experimental">Experimental</span></span>
+                <span class="mo-desc">Our most capable model — full website builds, complex bug fixes, and the toughest security challenges.</span>
+              </span>
+              <span class="mo-check"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </button>
+
+            <div class="model-footnote">Free includes Standard. Building websites, fixing complex bugs, or tackling the toughest challenges needs Sentinel or Apex (Pro).</div>
+          </div>
+        </div>
       </div>
       <div class="topbar-right">
         <button class="icon-btn connectors-cta" id="openConnectors">
-          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="4" cy="4" r="2" stroke="#B9C1D4" stroke-width="1.3"/><circle cx="11" cy="4" r="2" stroke="#B9C1D4" stroke-width="1.3"/><circle cx="4" cy="11" r="2" stroke="#B9C1D4" stroke-width="1.3"/><circle cx="11" cy="11" r="2" stroke="#B9C1D4" stroke-width="1.3"/></svg>
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="4" cy="4" r="2" stroke="#5B6472" stroke-width="1.3"/><circle cx="11" cy="4" r="2" stroke="#5B6472" stroke-width="1.3"/><circle cx="4" cy="11" r="2" stroke="#5B6472" stroke-width="1.3"/><circle cx="11" cy="11" r="2" stroke="#5B6472" stroke-width="1.3"/></svg>
           Connectors
         </button>
         <button class="icon-btn" title="Theme">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.5 3.5l1.4 1.4M11.1 11.1l1.4 1.4M3.5 12.5l1.4-1.4M11.1 4.9l1.4-1.4" stroke="#B9C1D4" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="8" r="3" stroke="#B9C1D4" stroke-width="1.4"/></svg>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.5 3.5l1.4 1.4M11.1 11.1l1.4 1.4M3.5 12.5l1.4-1.4M11.1 4.9l1.4-1.4" stroke="#5B6472" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="8" r="3" stroke="#5B6472" stroke-width="1.4"/></svg>
         </button>
         <button class="icon-btn" title="Settings">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.3" stroke="#B9C1D4" stroke-width="1.4"/><path d="M8 1.5v2M8 12.5v2M14.5 8h-2M3.5 8h-2M12.7 3.3l-1.4 1.4M4.7 11.3l-1.4 1.4M12.7 12.7l-1.4-1.4M4.7 4.7L3.3 3.3" stroke="#B9C1D4" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.3" stroke="#5B6472" stroke-width="1.4"/><path d="M8 1.5v2M8 12.5v2M14.5 8h-2M3.5 8h-2M12.7 3.3l-1.4 1.4M4.7 11.3l-1.4 1.4M12.7 12.7l-1.4-1.4M4.7 4.7L3.3 3.3" stroke="#5B6472" stroke-width="1.4" stroke-linecap="round"/></svg>
         </button>
       </div>
     </div>
@@ -617,18 +815,18 @@
             <!-- + tools popover -->
             <div class="tools-popover" id="toolsPopover">
               <button class="tools-item" id="toolAddFile">
-                <span class="ti-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="2" y="2.5" width="11" height="10" rx="1.5" stroke="#B9C1D4" stroke-width="1.3"/><circle cx="5.3" cy="6" r="1.1" stroke="#B9C1D4" stroke-width="1.1"/><path d="M2.5 10.5l3-3 2 2 2.5-2.8 2.5 2.6" stroke="#B9C1D4" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+                <span class="ti-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="2" y="2.5" width="11" height="10" rx="1.5" stroke="#5B6472" stroke-width="1.3"/><circle cx="5.3" cy="6" r="1.1" stroke="#5B6472" stroke-width="1.1"/><path d="M2.5 10.5l3-3 2 2 2.5-2.8 2.5 2.6" stroke="#5B6472" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
                 <span class="ti-label"><span class="ti-title">Add photos &amp; files</span></span>
               </button>
               <button class="tools-item" id="toolScreenshot">
-                <span class="ti-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 5.5a1.5 1.5 0 011.5-1.5h1l.7-1.2h3.6L9.5 4h1a1.5 1.5 0 011.5 1.5v5A1.5 1.5 0 0110.5 12h-7A1.5 1.5 0 012 10.5v-5z" stroke="#B9C1D4" stroke-width="1.2" stroke-linejoin="round"/><circle cx="7.5" cy="7.7" r="2.1" stroke="#B9C1D4" stroke-width="1.2"/></svg></span>
+                <span class="ti-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 5.5a1.5 1.5 0 011.5-1.5h1l.7-1.2h3.6L9.5 4h1a1.5 1.5 0 011.5 1.5v5A1.5 1.5 0 0110.5 12h-7A1.5 1.5 0 012 10.5v-5z" stroke="#5B6472" stroke-width="1.2" stroke-linejoin="round"/><circle cx="7.5" cy="7.7" r="2.1" stroke="#5B6472" stroke-width="1.2"/></svg></span>
                 <span class="ti-label"><span class="ti-title">Take screenshot</span></span>
               </button>
 
               <div class="tools-divider"></div>
 
               <div class="tools-item" id="toolWebSearch" role="button" tabindex="0">
-                <span class="ti-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="#B9C1D4" stroke-width="1.2"/><path d="M2 7.5h11M7.5 2c1.7 1.7 1.7 9.3 0 11M7.5 2c-1.7 1.7-1.7 9.3 0 11" stroke="#B9C1D4" stroke-width="1"/></svg></span>
+                <span class="ti-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="#5B6472" stroke-width="1.2"/><path d="M2 7.5h11M7.5 2c1.7 1.7 1.7 9.3 0 11M7.5 2c-1.7 1.7-1.7 9.3 0 11" stroke="#5B6472" stroke-width="1"/></svg></span>
                 <span class="ti-label">
                   <span class="ti-title">Web search</span>
                   <span class="ti-sub">Look things up on the live web</span>
@@ -637,7 +835,7 @@
               </div>
 
               <div class="tools-item" id="toolResearch" role="button" tabindex="0">
-                <span class="ti-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M6.2 2.5h2.6l.6 1.9 1.9.6v2.6l1.4 1.4-1.4 1.4v1.9l-1.9.6-.6 1.9H6.2l-.6-1.9-1.9-.6V8.4L2.3 7l1.4-1.4V3.7l1.9-.6.6-1.9z" stroke="#B9C1D4" stroke-width="1"/><circle cx="7.5" cy="7.5" r="1.6" stroke="#B9C1D4" stroke-width="1.1"/></svg></span>
+                <span class="ti-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M6.2 2.5h2.6l.6 1.9 1.9.6v2.6l1.4 1.4-1.4 1.4v1.9l-1.9.6-.6 1.9H6.2l-.6-1.9-1.9-.6V8.4L2.3 7l1.4-1.4V3.7l1.9-.6.6-1.9z" stroke="#5B6472" stroke-width="1"/><circle cx="7.5" cy="7.5" r="1.6" stroke="#5B6472" stroke-width="1.1"/></svg></span>
                 <span class="ti-label">
                   <span class="ti-title">Research mode</span>
                   <span class="ti-sub">Slower, deeper multi-step research</span>
@@ -648,19 +846,19 @@
               <div class="tools-divider"></div>
 
               <button class="tools-item" id="toolConnectors">
-                <span class="ti-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="4" cy="4" r="1.8" stroke="#B9C1D4" stroke-width="1.2"/><circle cx="11" cy="4" r="1.8" stroke="#B9C1D4" stroke-width="1.2"/><circle cx="4" cy="11" r="1.8" stroke="#B9C1D4" stroke-width="1.2"/><circle cx="11" cy="11" r="1.8" stroke="#B9C1D4" stroke-width="1.2"/></svg></span>
+                <span class="ti-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="4" cy="4" r="1.8" stroke="#5B6472" stroke-width="1.2"/><circle cx="11" cy="4" r="1.8" stroke="#5B6472" stroke-width="1.2"/><circle cx="4" cy="11" r="1.8" stroke="#5B6472" stroke-width="1.2"/><circle cx="11" cy="11" r="1.8" stroke="#5B6472" stroke-width="1.2"/></svg></span>
                 <span class="ti-label">
                   <span class="ti-title">Connectors</span>
                   <span class="ti-sub">Browse &amp; connect your apps</span>
                 </span>
-                <span class="ti-chevron"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5l3.5 3.5-3.5 3.5" stroke="#B9C1D4" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="ti-chevron"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5l3.5 3.5-3.5 3.5" stroke="#5B6472" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </button>
             </div>
 
             <input type="file" id="fileInput" multiple style="display:none;">
 
             <button class="pill-btn" id="openConnectors2">
-              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="3.5" cy="3.5" r="1.8" stroke="#B9C1D4" stroke-width="1.2"/><circle cx="9.5" cy="3.5" r="1.8" stroke="#B9C1D4" stroke-width="1.2"/><circle cx="3.5" cy="9.5" r="1.8" stroke="#B9C1D4" stroke-width="1.2"/><circle cx="9.5" cy="9.5" r="1.8" stroke="#B9C1D4" stroke-width="1.2"/></svg>
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="3.5" cy="3.5" r="1.8" stroke="#5B6472" stroke-width="1.2"/><circle cx="9.5" cy="3.5" r="1.8" stroke="#5B6472" stroke-width="1.2"/><circle cx="3.5" cy="9.5" r="1.8" stroke="#5B6472" stroke-width="1.2"/><circle cx="9.5" cy="9.5" r="1.8" stroke="#5B6472" stroke-width="1.2"/></svg>
               GitHub, Slack +4
             </button>
           </div>
@@ -689,60 +887,60 @@
     <div class="modal-body">
       <div class="conn-section-label">Network tools <span style="text-transform:none; opacity:0.7;">(built in, always on)</span></div>
       <div class="conn-row">
-        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6.5" stroke="#B9C1D4" stroke-width="1.4"/><path d="M2.5 9h13M9 2.5c2 2 2 11 0 13M9 2.5c-2 2-2 11 0 13" stroke="#B9C1D4" stroke-width="1.2"/></svg></div>
+        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6.5" stroke="#5B6472" stroke-width="1.4"/><path d="M2.5 9h13M9 2.5c2 2 2 11 0 13M9 2.5c-2 2-2 11 0 13" stroke="#5B6472" stroke-width="1.2"/></svg></div>
         <div class="conn-info"><div class="conn-name">DNS &amp; IP lookup</div><div class="conn-desc">Resolve domains, check A/AAAA/PTR records, ASN &amp; hosting</div></div>
         <div class="conn-toggle on"><div class="knob"></div></div>
       </div>
       <div class="conn-row">
-        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="5" width="12" height="9" rx="1.5" stroke="#B9C1D4" stroke-width="1.4"/><path d="M6 5V3.5a3 3 0 016 0V5" stroke="#B9C1D4" stroke-width="1.4"/></svg></div>
+        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="5" width="12" height="9" rx="1.5" stroke="#5B6472" stroke-width="1.4"/><path d="M6 5V3.5a3 3 0 016 0V5" stroke="#5B6472" stroke-width="1.4"/></svg></div>
         <div class="conn-info"><div class="conn-name">SSL / TLS certificate check</div><div class="conn-desc">Expiry, issuer, chain validity for a given domain</div></div>
         <div class="conn-toggle on"><div class="knob"></div></div>
       </div>
       <div class="conn-row">
-        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2.5v13M2.5 9h13" stroke="#B9C1D4" stroke-width="1.4" stroke-linecap="round"/><circle cx="9" cy="9" r="6.5" stroke="#B9C1D4" stroke-width="1.4"/></svg></div>
+        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2.5v13M2.5 9h13" stroke="#5B6472" stroke-width="1.4" stroke-linecap="round"/><circle cx="9" cy="9" r="6.5" stroke="#5B6472" stroke-width="1.4"/></svg></div>
         <div class="conn-info"><div class="conn-name">WHOIS lookup</div><div class="conn-desc">Registrar, registration date, public contact info</div></div>
         <div class="conn-toggle on"><div class="knob"></div></div>
       </div>
 
       <div class="conn-section-label">Code &amp; deploys</div>
       <div class="conn-row">
-        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6.5" stroke="#B9C1D4" stroke-width="1.4"/><path d="M9 5v4l3 2" stroke="#B9C1D4" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6.5" stroke="#5B6472" stroke-width="1.4"/><path d="M9 5v4l3 2" stroke="#5B6472" stroke-width="1.4" stroke-linecap="round"/></svg></div>
         <div class="conn-info"><div class="conn-name">GitHub</div><div class="conn-desc">Repos, PRs, deploy history</div></div>
         <div class="conn-toggle on"><div class="knob"></div></div>
       </div>
       <div class="conn-row">
-        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2.5" y="2.5" width="13" height="13" rx="2" stroke="#B9C1D4" stroke-width="1.4"/><path d="M6 9h6M9 6v6" stroke="#B9C1D4" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2.5" y="2.5" width="13" height="13" rx="2" stroke="#5B6472" stroke-width="1.4"/><path d="M6 9h6M9 6v6" stroke="#5B6472" stroke-width="1.4" stroke-linecap="round"/></svg></div>
         <div class="conn-info"><div class="conn-name">GitLab</div><div class="conn-desc">Repos, merge requests, CI</div></div>
         <div class="conn-toggle"><div class="knob"></div></div>
       </div>
 
       <div class="conn-section-label">Communication</div>
       <div class="conn-row">
-        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M6 3.5h4a2.5 2.5 0 010 5H6a2.5 2.5 0 000 5h4" stroke="#B9C1D4" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M6 3.5h4a2.5 2.5 0 010 5H6a2.5 2.5 0 000 5h4" stroke="#5B6472" stroke-width="1.4" stroke-linecap="round"/></svg></div>
         <div class="conn-info"><div class="conn-name">Slack</div><div class="conn-desc">Post alerts, search channels</div></div>
         <div class="conn-toggle on"><div class="knob"></div></div>
       </div>
       <div class="conn-row">
-        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2.5" y="4" width="13" height="10" rx="1.5" stroke="#B9C1D4" stroke-width="1.4"/><path d="M2.5 5.5L9 10l6.5-4.5" stroke="#B9C1D4" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2.5" y="4" width="13" height="10" rx="1.5" stroke="#5B6472" stroke-width="1.4"/><path d="M2.5 5.5L9 10l6.5-4.5" stroke="#5B6472" stroke-width="1.4" stroke-linecap="round"/></svg></div>
         <div class="conn-info"><div class="conn-name">Email</div><div class="conn-desc">Reported phishing, notifications</div></div>
         <div class="conn-toggle"><div class="knob"></div></div>
       </div>
 
       <div class="conn-section-label">Tickets &amp; docs</div>
       <div class="conn-row">
-        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="2.5" width="12" height="13" rx="1.5" stroke="#B9C1D4" stroke-width="1.4"/><path d="M6 6.5h6M6 9.5h6M6 12.5h3.5" stroke="#B9C1D4" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="2.5" width="12" height="13" rx="1.5" stroke="#5B6472" stroke-width="1.4"/><path d="M6 6.5h6M6 9.5h6M6 12.5h3.5" stroke="#5B6472" stroke-width="1.2" stroke-linecap="round"/></svg></div>
         <div class="conn-info"><div class="conn-name">Issue tracker</div><div class="conn-desc">Create &amp; link tickets to findings</div></div>
         <div class="conn-toggle on"><div class="knob"></div></div>
       </div>
       <div class="conn-row">
-        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 2.5h7l3 3v10a1 1 0 01-1 1H4a1 1 0 01-1-1v-12a1 1 0 011-1z" stroke="#B9C1D4" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 2.5h7l3 3v10a1 1 0 01-1 1H4a1 1 0 01-1-1v-12a1 1 0 011-1z" stroke="#5B6472" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
         <div class="conn-info"><div class="conn-name">Docs workspace</div><div class="conn-desc">Runbooks, postmortems</div></div>
         <div class="conn-toggle"><div class="knob"></div></div>
       </div>
 
       <div class="conn-section-label">Calendar</div>
       <div class="conn-row">
-        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2.5" y="3.5" width="13" height="12" rx="1.5" stroke="#B9C1D4" stroke-width="1.4"/><path d="M2.5 7h13M6 2v3M12 2v3" stroke="#B9C1D4" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        <div class="conn-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2.5" y="3.5" width="13" height="12" rx="1.5" stroke="#5B6472" stroke-width="1.4"/><path d="M2.5 7h13M6 2v3M12 2v3" stroke="#5B6472" stroke-width="1.4" stroke-linecap="round"/></svg></div>
         <div class="conn-info"><div class="conn-name">Calendar</div><div class="conn-desc">Schedule reviews, on-call context</div></div>
         <div class="conn-toggle"><div class="knob"></div></div>
       </div>
@@ -934,6 +1132,162 @@
     closeToolsPopover();
     openConnectorsModal();
   });
+
+  // ---------------- customize sidebar ----------------
+  const CUSTOMIZE_KEY = 'redoubt-sidebar-customize';
+  function loadCustomizeState(){
+    try {
+      return JSON.parse(localStorage.getItem(CUSTOMIZE_KEY)) || {};
+    } catch { return {}; }
+  }
+  function saveCustomizeState(state){
+    localStorage.setItem(CUSTOMIZE_KEY, JSON.stringify(state));
+  }
+  const customizeState = Object.assign({
+    environments: true, recent: true, integrations: true, apps: true,
+    accent: '#1C9A8D', customLinks: []
+  }, loadCustomizeState());
+
+  const customizeToggle = document.getElementById('customizeToggle');
+  const customizePanel = document.getElementById('customizePanel');
+  customizeToggle.addEventListener('click', () => {
+    const open = !customizePanel.classList.contains('open');
+    customizePanel.classList.toggle('open', open);
+    customizeToggle.setAttribute('aria-expanded', String(open));
+  });
+
+  const customizeMoreBtn = document.getElementById('customizeMoreBtn');
+  const customizeMore = document.getElementById('customizeMore');
+  customizeMoreBtn.addEventListener('click', () => {
+    const open = !customizeMore.classList.contains('open');
+    customizeMore.classList.toggle('open', open);
+    customizeMoreBtn.classList.toggle('open', open);
+    customizeMoreBtn.setAttribute('aria-expanded', String(open));
+  });
+
+  function wireSectionToggle(toggleId, sectionEl, key){
+    const toggle = document.getElementById(toggleId);
+    function apply(on){
+      toggle.classList.toggle('on', on);
+      sectionEl.style.display = on ? '' : 'none';
+      customizeState[key] = on;
+      saveCustomizeState(customizeState);
+    }
+    toggle.addEventListener('click', () => apply(!toggle.classList.contains('on')));
+    apply(customizeState[key]);
+  }
+  wireSectionToggle('toggleEnvironments', document.getElementById('sectionEnvironments'), 'environments');
+  wireSectionToggle('toggleRecent', document.getElementById('sectionRecent'), 'recent');
+  wireSectionToggle('toggleIntegrations', document.getElementById('navIntegrations'), 'integrations');
+  wireSectionToggle('toggleApps', document.getElementById('navApps'), 'apps');
+
+  // accent color — live-updates every element using var(--cyan)
+  const accentSwatches = document.querySelectorAll('.accent-swatch');
+  function applyAccent(color){
+    document.documentElement.style.setProperty('--cyan', color);
+    accentSwatches.forEach(s => s.classList.toggle('selected', s.dataset.accent === color));
+    customizeState.accent = color;
+    saveCustomizeState(customizeState);
+  }
+  accentSwatches.forEach(s => s.addEventListener('click', () => applyAccent(s.dataset.accent)));
+  applyAccent(customizeState.accent);
+
+  // custom sidebar links
+  const customNavItems = document.getElementById('customNavItems');
+  const customLinksList = document.getElementById('customLinksList');
+  function renderCustomLink(link){
+    const nav = document.createElement('a');
+    nav.href = link.url;
+    nav.target = '_blank';
+    nav.rel = 'noopener noreferrer';
+    nav.className = 'sb-nav-item';
+    nav.style.textDecoration = 'none';
+    nav.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6.5 4.5H4a1.5 1.5 0 00-1.5 1.5v6A1.5 1.5 0 004 13.5h6a1.5 1.5 0 001.5-1.5V9.5M9.5 2.5H13.5V6.5M13 3L7.5 8.5" stroke="#5B6472" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const label = document.createElement('span');
+    label.textContent = link.label;
+    nav.appendChild(label);
+    customNavItems.appendChild(nav);
+
+    const row = document.createElement('div');
+    row.className = 'custom-link-row';
+    const name = document.createElement('span');
+    name.className = 'cl-name';
+    name.textContent = link.label;
+    row.appendChild(name);
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'cl-remove';
+    remove.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
+    remove.addEventListener('click', () => {
+      nav.remove();
+      row.remove();
+      customizeState.customLinks = customizeState.customLinks.filter(l => l.id !== link.id);
+      saveCustomizeState(customizeState);
+    });
+    row.appendChild(remove);
+    customLinksList.appendChild(row);
+  }
+  customizeState.customLinks.forEach(renderCustomLink);
+
+  document.getElementById('customizeAddForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const labelInput = document.getElementById('customLinkLabel');
+    const urlInput = document.getElementById('customLinkUrl');
+    const link = { id: 'cl-' + Date.now(), label: labelInput.value.trim(), url: urlInput.value.trim() };
+    if (!link.label || !link.url) return;
+    customizeState.customLinks.push(link);
+    saveCustomizeState(customizeState);
+    renderCustomLink(link);
+    labelInput.value = '';
+    urlInput.value = '';
+  });
+
+  // ---------------- model & effort selector ----------------
+  const MODEL_KEY = 'redoubt-model-choice';
+  const modelPillBtn = document.getElementById('modelPillBtn');
+  const modelPopover = document.getElementById('modelPopover');
+  const modelPillLabel = document.getElementById('modelPillLabel');
+  const modelPillDot = document.getElementById('modelPillDot');
+  const modelOptions = document.querySelectorAll('.model-option');
+  const effortOpts = document.querySelectorAll('.effort-opt');
+
+  function closeModelPopover(){
+    modelPopover.classList.remove('open');
+    modelPillBtn.setAttribute('aria-expanded', 'false');
+  }
+  modelPillBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const willOpen = !modelPopover.classList.contains('open');
+    modelPopover.classList.toggle('open', willOpen);
+    modelPillBtn.setAttribute('aria-expanded', String(willOpen));
+  });
+  document.addEventListener('click', (e) => {
+    if (!modelPopover.contains(e.target) && e.target !== modelPillBtn) closeModelPopover();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModelPopover(); });
+
+  let modelChoice = { model: 'standard', effort: 'faster' };
+  try { modelChoice = Object.assign(modelChoice, JSON.parse(localStorage.getItem(MODEL_KEY)) || {}); } catch {}
+
+  function selectModel(name){
+    modelOptions.forEach(opt => opt.classList.toggle('selected', opt.dataset.model === name));
+    const chosen = document.querySelector('.model-option[data-model="' + name + '"]');
+    if (!chosen) return;
+    modelPillLabel.textContent = chosen.querySelector('.mo-title').textContent;
+    modelPillDot.style.background = chosen.dataset.color;
+    modelChoice.model = name;
+    localStorage.setItem(MODEL_KEY, JSON.stringify(modelChoice));
+  }
+  function selectEffort(name){
+    effortOpts.forEach(opt => opt.classList.toggle('active', opt.dataset.effort === name));
+    modelChoice.effort = name;
+    localStorage.setItem(MODEL_KEY, JSON.stringify(modelChoice));
+  }
+  modelOptions.forEach(opt => opt.addEventListener('click', () => selectModel(opt.dataset.model)));
+  effortOpts.forEach(opt => opt.addEventListener('click', () => selectEffort(opt.dataset.effort)));
+
+  selectModel(modelChoice.model);
+  selectEffort(modelChoice.effort);
 </script>
 
 </body>
