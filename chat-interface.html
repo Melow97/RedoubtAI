@@ -266,7 +266,14 @@
     display:flex; flex-direction:column; align-items:center;
     padding:32px 20px 20px;
   }
-  .convo-inner{ width:100%; max-width:720px; display:flex; flex-direction:column; gap:26px; }
+  .convo-inner{ width:100%; max-width:720px; flex:1; display:flex; flex-direction:column; gap:26px; }
+
+  .convo-empty{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; gap:14px; padding:20px;
+  }
+  .convo-empty h2{ font-size:21px; }
+  .convo-empty p{ font-size:14px; color:var(--paper-dim); max-width:38ch; margin:0; }
 
   .msg{ display:flex; gap:14px; }
   .msg-avatar{
@@ -739,81 +746,12 @@
     </div>
 
     <div class="convo">
-      <div class="convo-inner">
-
-        <div class="msg user">
-          <div class="msg-avatar user mono" style="color:#0B1220; font-size:12px; font-weight:700;">M</div>
-          <div class="msg-body">
-            <div class="msg-role">You</div>
-            <p>We got an alert about outbound traffic from prod-cluster-eu around 3am. Can you pull what happened and check if it's tied to anything in the last few deploys?</p>
-          </div>
+      <div class="convo-inner" id="convoInner">
+        <div class="convo-empty" id="convoEmpty">
+          <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M16 2 L26 6 V14 C26 21.5 21.5 27 16 30 C10.5 27 6 21.5 6 14 V6 Z" stroke="#1C9A8D" stroke-width="1.6" stroke-linejoin="round" fill="rgba(79,209,197,0.06)"/><path d="M11.5 21 L16 9 L20.5 21" stroke="#1C9A8D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h2>What's on your mind, Mel?</h2>
+          <p>Ask about traffic, code, deploys, or anything security-related — Redoubt reads it like a signal, not a log.</p>
         </div>
-
-        <div class="msg ai">
-          <div class="msg-avatar ai">
-            <svg width="15" height="15" viewBox="0 0 32 32" fill="none"><path d="M16 2 L26 6 V14 C26 21.5 21.5 27 16 30 C10.5 27 6 21.5 6 14 V6 Z" stroke="#1C9A8D" stroke-width="1.6" stroke-linejoin="round" fill="rgba(79,209,197,0.07)"/><path d="M11.5 21 L16 9 L20.5 21" stroke="#1C9A8D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <div class="msg-body">
-            <div class="msg-role">Redoubt</div>
-            <p>Pulled the traffic logs for prod-cluster-eu between 2:45–3:20am and cross-checked against your last 5 deploys via the GitHub connector. Here's what stands out:</p>
-
-            <div class="finding-card">
-              <span class="sev high">High</span>
-              <div>
-                <div class="ft">Repeated outbound calls to an unrecognized IP range</div>
-                <div class="fd">142 requests in 12 minutes from the <code>payments-worker</code> pod — not part of any known integration.</div>
-              </div>
-            </div>
-            <div class="finding-card">
-              <span class="sev med">Related</span>
-              <div>
-                <div class="ft">Deploy at 2:41am touched payments-worker</div>
-                <div class="fd">PR #491, merged 6 minutes before the spike started. Want me to open it for review?</div>
-              </div>
-            </div>
-
-            <p style="margin-top:14px;">I'd hold off redeploying <code>payments-worker</code> until we've confirmed this isn't a compromised dependency. Want me to draft an incident note for the team?</p>
-          </div>
-        </div>
-
-        <div class="msg user">
-          <div class="msg-avatar user mono" style="color:#0B1220; font-size:12px; font-weight:700;">M</div>
-          <div class="msg-body">
-            <div class="msg-role">You</div>
-            <p>What's the IP address behind checkout.example.com, and who's it hosted with?</p>
-          </div>
-        </div>
-
-        <div class="msg ai">
-          <div class="msg-avatar ai">
-            <svg width="15" height="15" viewBox="0 0 32 32" fill="none"><path d="M16 2 L26 6 V14 C26 21.5 21.5 27 16 30 C10.5 27 6 21.5 6 14 V6 Z" stroke="#1C9A8D" stroke-width="1.6" stroke-linejoin="round" fill="rgba(79,209,197,0.07)"/><path d="M11.5 21 L16 9 L20.5 21" stroke="#1C9A8D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <div class="msg-body">
-            <div class="msg-role">Redoubt</div>
-            <p>Resolved <code>checkout.example.com</code>:</p>
-            <div class="finding-card">
-              <span class="sev med">DNS</span>
-              <div>
-                <div class="ft mono">104.21.42.19 <span style="color:var(--paper-faint); font-weight:400;">(A record)</span></div>
-                <div class="fd">Hosted behind Cloudflare · ASN AS13335 · no PTR record set. Also resolves an AAAA (IPv6) record if you need it.</div>
-              </div>
-            </div>
-            <p style="margin-top:14px;">Want me to check SSL cert details or run this against your known-good IP allowlist for that environment?</p>
-          </div>
-        </div>
-
-        <div class="msg ai">
-          <div class="msg-avatar ai">
-            <svg width="15" height="15" viewBox="0 0 32 32" fill="none"><path d="M16 2 L26 6 V14 C26 21.5 21.5 27 16 30 C10.5 27 6 21.5 6 14 V6 Z" stroke="#1C9A8D" stroke-width="1.6" stroke-linejoin="round" fill="rgba(79,209,197,0.07)"/><path d="M11.5 21 L16 9 L20.5 21" stroke="#1C9A8D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <div class="msg-body">
-            <div class="thinking">
-              <span class="thinking-dots"><span></span><span></span><span></span></span>
-              <span class="thinking-text mono" id="thinkingText">Reading the signal…</span>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
 
@@ -1028,15 +966,42 @@
     connEmpty.classList.toggle('show', !anyVisibleTotal);
   });
 
-  // rotating "thinking" copy
-  const phrases = ["Reading the signal…", "Cross-checking deploys…", "Lining up the findings…", "Putting it into words…"];
-  let i = 0;
-  const thinkingEl = document.getElementById('thinkingText');
-  setInterval(() => {
-    i = (i + 1) % phrases.length;
-    thinkingEl.style.opacity = 0;
-    setTimeout(() => { thinkingEl.textContent = phrases[i]; thinkingEl.style.opacity = 1; }, 250);
-  }, 2200);
+  // ---------------- sending a message ----------------
+  const convoInner = document.getElementById('convoInner');
+  const convoEmpty = document.getElementById('convoEmpty');
+  const sendBtn = document.querySelector('.send-btn');
+
+  function addMessage(role, html){
+    convoEmpty.remove();
+    const msg = document.createElement('div');
+    msg.className = 'msg ' + role;
+    if (role === 'user') {
+      msg.innerHTML = '<div class="msg-avatar user mono" style="color:#0B1220; font-size:12px; font-weight:700;">M</div>' +
+        '<div class="msg-body"><div class="msg-role">You</div><p></p></div>';
+      msg.querySelector('p').textContent = html;
+    } else {
+      msg.innerHTML = '<div class="msg-avatar ai"><svg width="15" height="15" viewBox="0 0 32 32" fill="none"><path d="M16 2 L26 6 V14 C26 21.5 21.5 27 16 30 C10.5 27 6 21.5 6 14 V6 Z" stroke="#1C9A8D" stroke-width="1.6" stroke-linejoin="round" fill="rgba(79,209,197,0.07)"/><path d="M11.5 21 L16 9 L20.5 21" stroke="#1C9A8D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' +
+        '<div class="msg-body"><div class="msg-role">Redoubt</div>' + html + '</div>';
+    }
+    convoInner.appendChild(msg);
+    document.querySelector('.convo').scrollTop = document.querySelector('.convo').scrollHeight;
+    return msg;
+  }
+
+  function sendMessage(){
+    const text = ta.value.trim();
+    if (!text) return;
+    addMessage('user', text);
+    ta.value = '';
+    ta.dispatchEvent(new Event('input'));
+
+    const aiMsg = addMessage('ai', '<div class="thinking"><span class="thinking-dots"><span></span><span></span><span></span></span><span class="thinking-text mono">Thinking…</span></div>');
+    setTimeout(() => {
+      aiMsg.querySelector('.msg-body').innerHTML = '<div class="msg-role">Redoubt</div>' +
+        '<p>This preview isn\'t wired up to a live model yet — there\'s no backend running behind this demo, so there\'s nothing real to answer with. Once a backend calls a real model (with web search enabled for things like live scores), real answers will show up right here instead of this note.</p>';
+    }, 900);
+  }
+  sendBtn.addEventListener('click', sendMessage);
 
   // auto-grow textarea
   const ta = document.querySelector('.input-box textarea');
@@ -1062,7 +1027,12 @@
         e.preventDefault();
         this.value = shortcuts[trigger];
         this.dispatchEvent(new Event('input'));
+        return;
       }
+    }
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
     }
   });
 
