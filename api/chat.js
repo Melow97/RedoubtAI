@@ -58,7 +58,7 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const { messages, email, model } = req.body || {};
+  const { messages, email, model, search } = req.body || {};
   if (!Array.isArray(messages) || messages.length === 0) {
     res.status(400).json({ error: 'Request body must include a non-empty "messages" array.' });
     return;
@@ -96,6 +96,18 @@ module.exports = async function handler(req, res) {
     parts: [{ text: msg.content }],
   }));
 
+  const requestBody = {
+    contents,
+    systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+    generationConfig: { maxOutputTokens: MAX_TOKENS_MAP[modelKey] },
+  };
+  // Grounding (google_search) draws from its own, much smaller free-tier quota
+  // than plain generateContent -- only pay that cost when the user actually
+  // asked for it via the Web search / Research mode toggles.
+  if (search) {
+    requestBody.tools = [{ google_search: {} }];
+  }
+
   try {
     const upstream = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${resolvedModel}:generateContent`,
@@ -105,12 +117,7 @@ module.exports = async function handler(req, res) {
           'content-type': 'application/json',
           'x-goog-api-key': apiKey,
         },
-        body: JSON.stringify({
-          contents,
-          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-          generationConfig: { maxOutputTokens: MAX_TOKENS_MAP[modelKey] },
-          tools: [{ google_search: {} }],
-        }),
+        body: JSON.stringify(requestBody),
       }
     );
 

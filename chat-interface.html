@@ -1095,7 +1095,7 @@
       const resp = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ messages: conversationHistory, email: storedUser?.email || undefined, model: modelChoice.model }),
+        body: JSON.stringify({ messages: conversationHistory, email: storedUser?.email || undefined, model: modelChoice.model, search: webSearchOn || researchOn }),
       });
 
       let data;
@@ -1256,12 +1256,15 @@
   });
 
   // Web search / Research mode toggles
-  function wireModeToggle({ itemId, toggleId, label }){
+  let webSearchOn = false;
+  let researchOn = false;
+  function wireModeToggle({ itemId, toggleId, label, onChange }){
     const item = document.getElementById(itemId);
     const toggle = document.getElementById(toggleId);
     let chip = null;
     function setOn(on){
       toggle.classList.toggle('on', on);
+      onChange(on);
       if (on && !chip){
         chip = addChip({ label, mode: true, onRemove: () => setOn(false) });
       } else if (!on && chip){
@@ -1275,8 +1278,8 @@
       if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); setOn(!toggle.classList.contains('on')); }
     });
   }
-  wireModeToggle({ itemId: 'toolWebSearch', toggleId: 'webSearchToggle', label: 'Web search' });
-  wireModeToggle({ itemId: 'toolResearch', toggleId: 'researchToggle', label: 'Research mode' });
+  wireModeToggle({ itemId: 'toolWebSearch', toggleId: 'webSearchToggle', label: 'Web search', onChange: (on) => { webSearchOn = on; } });
+  wireModeToggle({ itemId: 'toolResearch', toggleId: 'researchToggle', label: 'Research mode', onChange: (on) => { researchOn = on; } });
 
   // Connectors — opens the existing full connectors browser
   document.getElementById('toolConnectors').addEventListener('click', () => {
