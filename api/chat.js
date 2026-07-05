@@ -7,7 +7,19 @@
 const { Redis } = require('@upstash/redis');
 const { sendAdminEmail } = require('./_lib/email');
 
-const MODEL = 'claude-sonnet-5';
+// Model per selector tier. Foundation is available to everyone; Sentinel
+// and Apex are Pro-only -- enforced server-side below, since the client's
+// selection can't be trusted (anyone could edit localStorage and claim a
+// tier they haven't paid for).
+const MODEL_MAP = {
+  standard: 'claude-haiku-4-5-20251001',
+  sentinel: 'claude-sonnet-5',
+  apex: 'claude-opus-4-8',
+};
+// Apex is advertised for full website builds and complex fixes, which need
+// real output budget -- 1024 tokens would truncate mid-file.
+const MAX_TOKENS_MAP = { standard: 1024, sentinel: 2048, apex: 4096 };
+const PRO_ONLY_MODELS = new Set(['sentinel', 'apex']);
 
 const SYSTEM_PROMPT =
   "You are Babylon AI, a security-focused AI copilot for a SOC/dev team. " +
@@ -46,7 +58,7 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const { messages, email } = req.body || {};
+  const { messages, email, model } = req.body || {};
   if (!Array.isArray(messages) || messages.length === 0) {
     res.status(400).json({ error: 'Request body must include a non-empty "messages" array.' });
     return;
@@ -75,6 +87,10 @@ module.exports = async function handler(req, res) {
     }
   }
 
+  const requestedModelKey = MODEL_MAP[model] ? model : 'standard';
+  const modelKey = PRO_ONLY_MODELS.has(requestedModelKey) && plan !== 'pro' ? 'standard' : requestedModelKey;
+  const resolvedModel = MODEL_MAP[modelKey];
+
   try {
     const upstream = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -84,8 +100,8 @@ module.exports = async function handler(req, res) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 1024,
+        model: resolvedModel,
+        max_tokens: MAX_TOKENS_MAP[modelKey],
         system: SYSTEM_PROMPT,
         messages,
         tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 3 }],
@@ -104,7 +120,10 @@ module.exports = async function handler(req, res) {
       .map((block) => block.text)
       .join('\n\n');
 
-    const responsePayload = { text: text || '(No text content returned.)' };
+    const responsePayload = { text: text || '(No text content returned.)', model: modelKey };
+    if (modelKey !== requestedModelKey) {
+      responsePayload.downgraded = true;
+    }
 
     if (trackUsage) {
       const turnTokens = (data.usage?.input_tokens || 0) + (data.usage?.output_tokens || 0);

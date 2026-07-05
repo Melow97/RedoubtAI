@@ -43,13 +43,13 @@ module.exports = async function handler(req, res) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!secretKey || !webhookSecret) {
     res.status(500).json({
-      error: 'Server is missing STRIPE_SECRET_KEY or STRIPE_WEBHOOK_SECRET. Set both in your hosting provider's environment variables.',
+      error: "Server is missing STRIPE_SECRET_KEY or STRIPE_WEBHOOK_SECRET. Set both in your hosting provider's environment variables.",
     });
     return;
   }
   if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
     res.status(500).json({
-      error: 'Server is missing a Redis store. Attach one from Vercel's Storage tab (Marketplace -> Redis) so its env vars get added automatically.',
+      error: "Server is missing a Redis store. Attach one from Vercel's Storage tab (Marketplace -> Redis) so its env vars get added automatically.",
     });
     return;
   }

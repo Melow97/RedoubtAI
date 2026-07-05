@@ -246,6 +246,8 @@
   }
   .model-option:hover{ background:var(--panel-3); }
   .model-option.selected{ background:rgba(38,65,122,0.08); border-color:rgba(38,65,122,0.35); }
+  .model-option.locked{ opacity:0.55; cursor:not-allowed; }
+  .model-option.locked:hover{ background:transparent; }
   .mo-body{ flex:1; min-width:0; }
   .mo-title-row{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
   .mo-title{ font-size:13.5px; font-weight:600; color:var(--paper); }
@@ -1093,7 +1095,7 @@
       const resp = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ messages: conversationHistory, email: storedUser?.email || undefined }),
+        body: JSON.stringify({ messages: conversationHistory, email: storedUser?.email || undefined, model: modelChoice.model }),
       });
 
       let data;
@@ -1108,6 +1110,7 @@
       conversationHistory.push({ role: 'assistant', content: data.text });
       setAiMessageText(aiMsg, data.text);
       if (data.usage) updateUsageBadge(data.usage);
+      if (data.downgraded) showToast('Sentinel and Apex are Pro-only — answered with Foundation instead.');
     } catch (err) {
       conversationHistory.pop();
       setAiMessageText(aiMsg, "Couldn't get a real answer: " + err.message);
@@ -1417,7 +1420,22 @@
   let modelChoice = { model: 'standard', effort: 'faster' };
   try { modelChoice = Object.assign(modelChoice, JSON.parse(localStorage.getItem(MODEL_KEY)) || {}); } catch {}
 
+  let isPlanPro = false;
+  try { isPlanPro = JSON.parse(localStorage.getItem('redoubt-user'))?.plan === 'pro'; } catch {}
+  const PRO_ONLY_MODELS = ['sentinel', 'apex'];
+  if (!isPlanPro) {
+    PRO_ONLY_MODELS.forEach(name => {
+      const opt = document.querySelector('.model-option[data-model="' + name + '"]');
+      if (opt) opt.classList.add('locked');
+    });
+    if (PRO_ONLY_MODELS.includes(modelChoice.model)) modelChoice.model = 'standard';
+  }
+
   function selectModel(name){
+    if (!isPlanPro && PRO_ONLY_MODELS.includes(name)) {
+      showToast('Sentinel and Apex are Pro-only — upgrade to unlock them.');
+      return;
+    }
     modelOptions.forEach(opt => opt.classList.toggle('selected', opt.dataset.model === name));
     const chosen = document.querySelector('.model-option[data-model="' + name + '"]');
     if (!chosen) return;
