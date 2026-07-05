@@ -1,8 +1,9 @@
-// Vercel serverless function: proxies chat requests to the Gemini API,
-// and (when the caller includes an email) tracks token usage against a
-// monthly plan limit in Redis. GEMINI_API_KEY is a server-side
-// environment variable only -- set it in Vercel's Settings -> Environment
-// Variables. Never in git, never in chat.
+// Vercel serverless function: proxies chat requests to the Groq API
+// (free-tier, OpenAI-compatible chat completions), and (when the caller
+// includes an email) tracks token usage against a monthly plan limit in
+// Redis. GROQ_API_KEY is a server-side environment variable only -- set
+// it in Vercel's Settings -> Environment Variables. Never in git, never
+// in chat.
 
 const { Redis } = require('@upstash/redis');
 const { sendAdminEmail } = require('./_lib/email');
@@ -12,20 +13,24 @@ const { sendAdminEmail } = require('./_lib/email');
 // selection can't be trusted (anyone could edit localStorage and claim a
 // tier they haven't paid for).
 const MODEL_MAP = {
-  standard: 'gemini-2.0-flash',
-  sentinel: 'gemini-2.5-flash',
-  apex: 'gemini-2.5-pro',
+  standard: 'llama-3.1-8b-instant',
+  sentinel: 'llama-3.3-70b-versatile',
+  apex: 'deepseek-r1-distill-llama-70b',
 };
 // Apex is advertised for full website builds and complex fixes, which need
 // real output budget -- 1024 tokens would truncate mid-file.
 const MAX_TOKENS_MAP = { standard: 1024, sentinel: 2048, apex: 4096 };
 const PRO_ONLY_MODELS = new Set(['sentinel', 'apex']);
+// DeepSeek R1's raw output includes its <think>...</think> chain-of-thought
+// ahead of the answer -- hide it so Apex responses look like every other
+// model's instead of leaking reasoning traces into the chat.
+const REASONING_MODELS = new Set(['apex']);
 
 const SYSTEM_PROMPT =
   "You are Babylon AI, a security-focused AI copilot for a SOC/dev team. " +
-  "Be concise and precise. Use Google Search only when the answer " +
-  "depends on live or current information (scores, news, prices, today's " +
-  "date-sensitive facts) — answer directly from your own knowledge otherwise.";
+  "Be concise and precise. Answer from your own knowledge, and say so " +
+  "plainly if a question depends on live or current information (scores, " +
+  "news, prices, today's date-sensitive facts) you can't verify.";
 
 // Token budgets per plan, per calendar month. Pro is intentionally roomy —
 // tune these as real usage patterns show up.
@@ -50,10 +55,10 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     res.status(500).json({
-      error: 'Server is missing GEMINI_API_KEY. Set it in your hosting provider’s environment variables and redeploy.',
+      error: 'Server is missing GROQ_API_KEY. Set it in your hosting provider’s environment variables and redeploy.',
     });
     return;
   }
@@ -91,28 +96,28 @@ module.exports = async function handler(req, res) {
   const modelKey = PRO_ONLY_MODELS.has(requestedModelKey) && plan !== 'pro' ? 'standard' : requestedModelKey;
   const resolvedModel = MODEL_MAP[modelKey];
 
-  const contents = messages.map((msg) => ({
-    role: msg.role === 'assistant' ? 'model' : 'user',
-    parts: [{ text: msg.content }],
-  }));
+  const chatMessages = [
+    { role: 'system', content: SYSTEM_PROMPT },
+    ...messages.map((msg) => ({
+      role: msg.role === 'assistant' ? 'assistant' : 'user',
+      content: msg.content,
+    })),
+  ];
 
   try {
-    const upstream = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${resolvedModel}:generateContent`,
-      {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          'x-goog-api-key': apiKey,
-        },
-        body: JSON.stringify({
-          contents,
-          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-          generationConfig: { maxOutputTokens: MAX_TOKENS_MAP[modelKey] },
-          tools: [{ google_search: {} }],
-        }),
-      }
-    );
+    const upstream = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        authorization: 'Bearer ' + apiKey,
+      },
+      body: JSON.stringify({
+        model: resolvedModel,
+        messages: chatMessages,
+        max_tokens: MAX_TOKENS_MAP[modelKey],
+        ...(REASONING_MODELS.has(modelKey) ? { reasoning_format: 'hidden' } : {}),
+      }),
+    });
 
     const data = await upstream.json();
 
@@ -121,10 +126,7 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    const text = (data.candidates?.[0]?.content?.parts || [])
-      .filter((part) => typeof part.text === 'string')
-      .map((part) => part.text)
-      .join('\n\n');
+    const text = data.choices?.[0]?.message?.content || '';
 
     const responsePayload = { text: text || '(No text content returned.)', model: modelKey };
     if (modelKey !== requestedModelKey) {
@@ -132,7 +134,7 @@ module.exports = async function handler(req, res) {
     }
 
     if (trackUsage) {
-      const turnTokens = (data.usageMetadata?.promptTokenCount || 0) + (data.usageMetadata?.candidatesTokenCount || 0);
+      const turnTokens = (data.usage?.prompt_tokens || 0) + (data.usage?.completion_tokens || 0);
       const newTokens = usage.tokens + turnTokens;
       const percent = Math.min(1, newTokens / limit);
       const key = 'usage:' + email.toLowerCase();
