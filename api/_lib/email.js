@@ -1,5 +1,5 @@
-// Shared helper: sends a notification email to the admin via Resend.
-// RESEND_API_KEY and ADMIN_EMAIL are server-side environment variables --
+// Shared helper: sends a notification email to the admin via SendGrid.
+// SENDGRID_API_KEY and ADMIN_EMAIL are server-side environment variables --
 // set them in Vercel's Settings -> Environment Variables. Never in git,
 // never in chat.
 //
@@ -7,31 +7,23 @@
 // never break the actual feature (a payment, a chat reply) that triggered
 // it, so errors are logged, not thrown.
 
-async function sendAdminEmail(subject, text) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const adminEmail = process.env.ADMIN_EMAIL;
+const sgMail = require('@sendgrid/mail');
+
+async function sendAdminEmail(subject, text, adminEmailOverride) {
+  const apiKey = process.env.SENDGRID_API_KEY;
+  const adminEmail = adminEmailOverride || process.env.ADMIN_EMAIL;
   if (!apiKey || !adminEmail) return;
 
   try {
-    const resp = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        authorization: 'Bearer ' + apiKey,
-      },
-      body: JSON.stringify({
-        from: process.env.RESEND_FROM_EMAIL || 'Babylon AI <onboarding@resend.dev>',
-        to: adminEmail,
-        subject,
-        text,
-      }),
+    sgMail.setApiKey(apiKey);
+    await sgMail.send({
+      to: adminEmail,
+      from: process.env.SENDGRID_FROM_EMAIL || 'noreply@yourdomain.com',
+      subject,
+      text,
     });
-    if (!resp.ok) {
-      const body = await resp.text();
-      console.error('Admin email failed:', resp.status, body);
-    }
   } catch (err) {
-    console.error('Admin email failed:', err.message);
+    console.error('Admin email failed:', err.response?.body || err.message);
   }
 }
 
