@@ -9,7 +9,7 @@ chat, see below) and a couple of other genuinely functional bits called out belo
 | File | What it is |
 |---|---|
 | `index.html` | Marketing/pitch landing page (hero, capabilities, pricing, mega-footer) |
-| `welcome-screen.html` | Post-landing sign-in screen (OAuth buttons + email continue) |
+| `welcome-screen.html` | Post-landing sign-in screen (Google sign-in is real once configured, see below; GitHub/Apple buttons are still decorative; email continue is real) |
 | `chat-interface.html` | Post-signin AI chat UI — sidebar, conversation, connectors panel, and the `+` tools menu |
 | `upgrade-plans.html` | Free vs. Pro plan comparison modal |
 
@@ -81,6 +81,24 @@ Note: Gemini's free tier has fairly low rate limits (requests/minute) shared acr
 visitor to your site, and can change without notice — if the chat starts erroring under
 real traffic, check quota in [Google AI Studio](https://aistudio.google.com) before assuming
 it's a code bug.
+
+## Real Google sign-in
+
+The "Continue with Google" button on `welcome-screen.html` uses Google Identity
+Services' OAuth token client (popup-based, no redirect page needed) to get the user's
+verified email, then feeds it into the same plan-check-and-redirect logic the email
+sign-in flow uses. It needs a Client ID before it's live:
+
+1. In [Google Cloud Console](https://console.cloud.google.com/apis/credentials), create
+   (or reuse) a project, then **Credentials → Create Credentials → OAuth client ID**,
+   type **Web application**.
+2. Under **Authorized JavaScript origins**, add your deployed origin (e.g.
+   `https://your-app.vercel.app`) and `http://localhost:3000` for local testing.
+3. Copy the resulting Client ID into `GOOGLE_CLIENT_ID` near the top of the `<script>`
+   block in `welcome-screen.html`. This is a public identifier, not a secret — safe to
+   hand-edit directly, same as `STRIPE_PAYMENT_LINK` below.
+4. Redeploy. "Continue with Google" now signs in with the real Google account email;
+   until this is set, clicking it shows a toast explaining it isn't configured yet.
 
 ## Real Stripe checkout with auto-granted Pro access
 
