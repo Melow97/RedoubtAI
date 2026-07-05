@@ -23,7 +23,8 @@ The chat input's `+` button opens a small popover with:
 
 - **Add photos & files** — opens a real file picker; selected files show as removable chips above the input (images get a thumbnail preview).
 - **Take screenshot** — uses the browser's `getDisplayMedia` screen-capture API to grab a real frame of whatever the user shares, and attaches it as a thumbnail chip. Falls back to a toast message if the browser doesn't support it or the user declines the permission prompt.
-- **Web search** / **Research mode** — togglable mode switches; when on, they show as dismissible pills above the input (UI state only, not wired to a backend yet).
+- **Web search** — toggle switch, shown as a dismissible pill above the input when on. Wired to a real lookup (see below); needs `TAVILY_API_KEY` to actually find anything.
+- **Research mode** — same togglable pill, but still UI state only (no backend behind it yet).
 - **Connectors** — opens the existing full connectors browser modal to see and toggle the list of integrated apps (GitHub, Slack, GitLab, etc.).
 
 ## Brand system
@@ -81,8 +82,25 @@ Note: Groq's free tier has generous but real rate limits (requests/tokens per mi
 day) shared across every visitor to your site, and can change without notice — if the chat
 starts erroring under real traffic, check usage in the
 [Groq console](https://console.groq.com) before assuming it's a code bug. Unlike the previous
-Gemini backend, there's no built-in web-search grounding here, so answers about live/current
-events rely on the model saying so rather than actually looking anything up.
+Gemini backend, there's no built-in web-search grounding here — see the next section for how
+that's now handled instead.
+
+## Real web search (the "Web search" toggle)
+
+Groq's models have no built-in equivalent to Gemini's search grounding, so live/current-event
+questions get answered from training data alone unless the user turns on **Web search** in
+the chat input's `+` menu. When that's on, `api/chat.js` calls
+[Tavily](https://tavily.com)'s search API for the latest message, drops the top results into
+the model's context, and asks it to cite sources when it uses them.
+
+1. Get a free key at [app.tavily.com](https://app.tavily.com) — 1,000 searches/month, no card
+   required.
+2. In Vercel's **Settings → Environment Variables**, add `TAVILY_API_KEY` with your key.
+3. Redeploy. Toggling **Web search** on now does a real lookup; leaving it off (or leaving
+   the key unset) just answers from the model's own knowledge, same as before.
+
+**Research mode** (the other toggle in the same menu) is still UI-only — no backend behind
+it yet.
 
 ## Real Google sign-in
 
@@ -167,6 +185,6 @@ After that, every push updates the same live URL automatically, and all the inte
 
 1. Add `business.html` and `customization.html` to complete the nav
 2. Finalize the product name (domain + trademark check)
-3. Wire the `+` menu's Web search / Research mode toggles into the actual chat request (right now they're UI state only — the backend always has web search available to the model regardless of the toggle)
+3. Wire the `+` menu's Research mode toggle into the actual chat request — it's still UI state only (Web search is now real, see below)
 4. Wire up DNS/IP lookup as the first real backend feature
 5. Add real Stripe checkout (see `STRIPE_PAYMENT_LINK` in `index.html` / `upgrade-plans.html`)

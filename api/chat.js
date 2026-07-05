@@ -32,6 +32,36 @@ const SYSTEM_PROMPT =
   "plainly if a question depends on live or current information (scores, " +
   "news, prices, today's date-sensitive facts) you can't verify.";
 
+// Optional: only used when the client opts in via the "Web search" toggle
+// in the + menu. TAVILY_API_KEY is a server-side environment variable --
+// leaving it unset just makes web search silently unavailable, same as
+// leaving RESEND_API_KEY unset skips admin emails.
+async function fetchWebSearchContext(query) {
+  const tavilyKey = process.env.TAVILY_API_KEY;
+  if (!tavilyKey || !query) return null;
+  try {
+    const resp = await fetch('https://api.tavily.com/search', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        api_key: tavilyKey,
+        query,
+        search_depth: 'basic',
+        max_results: 5,
+      }),
+    });
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    const results = data.results || [];
+    if (!results.length) return null;
+    return results
+      .map((r, i) => `${i + 1}. ${r.title} (${r.url})\n${r.content}`)
+      .join('\n\n');
+  } catch {
+    return null;
+  }
+}
+
 // Token budgets per plan, per calendar month. Pro is intentionally roomy —
 // tune these as real usage patterns show up.
 const PLAN_LIMITS = { free: 50000, pro: 2000000 };
@@ -63,7 +93,7 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const { messages, email, model } = req.body || {};
+  const { messages, email, model, webSearch } = req.body || {};
   if (!Array.isArray(messages) || messages.length === 0) {
     res.status(400).json({ error: 'Request body must include a non-empty "messages" array.' });
     return;
@@ -104,6 +134,22 @@ module.exports = async function handler(req, res) {
     })),
   ];
 
+  let webSearchUsed = false;
+  if (webSearch) {
+    const lastUserMessage = [...messages].reverse().find((msg) => msg.role !== 'assistant');
+    const searchContext = await fetchWebSearchContext(lastUserMessage?.content);
+    if (searchContext) {
+      chatMessages.splice(1, 0, {
+        role: 'system',
+        content:
+          "Live web search results for the user's latest message -- use them if " +
+          "relevant, ignore them if not, and cite source URLs when you rely on one:\n\n" +
+          searchContext,
+      });
+      webSearchUsed = true;
+    }
+  }
+
   try {
     const upstream = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -131,6 +177,9 @@ module.exports = async function handler(req, res) {
     const responsePayload = { text: text || '(No text content returned.)', model: modelKey };
     if (modelKey !== requestedModelKey) {
       responsePayload.downgraded = true;
+    }
+    if (webSearch) {
+      responsePayload.webSearchUsed = webSearchUsed;
     }
 
     if (trackUsage) {

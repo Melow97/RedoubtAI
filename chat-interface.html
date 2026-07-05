@@ -1095,7 +1095,7 @@
       const resp = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ messages: conversationHistory, email: storedUser?.email || undefined, model: modelChoice.model }),
+        body: JSON.stringify({ messages: conversationHistory, email: storedUser?.email || undefined, model: modelChoice.model, webSearch: modeState.webSearch }),
       });
 
       let data;
@@ -1111,6 +1111,7 @@
       setAiMessageText(aiMsg, data.text);
       if (data.usage) updateUsageBadge(data.usage);
       if (data.downgraded) showToast('Sentinel and Apex are Pro-only — answered with Foundation instead.');
+      if (modeState.webSearch && data.webSearchUsed === false) showToast('Web search is unavailable right now — answered from the model\'s own knowledge.');
     } catch (err) {
       conversationHistory.pop();
       setAiMessageText(aiMsg, "Couldn't get a real answer: " + err.message);
@@ -1255,12 +1256,15 @@
     }
   });
 
-  // Web search / Research mode toggles
-  function wireModeToggle({ itemId, toggleId, label }){
+  // Web search / Research mode toggles. Web search is wired to a real
+  // backend lookup (see sendMessage); Research mode is still UI state only.
+  const modeState = { webSearch: false, research: false };
+  function wireModeToggle({ itemId, toggleId, label, stateKey }){
     const item = document.getElementById(itemId);
     const toggle = document.getElementById(toggleId);
     let chip = null;
     function setOn(on){
+      modeState[stateKey] = on;
       toggle.classList.toggle('on', on);
       if (on && !chip){
         chip = addChip({ label, mode: true, onRemove: () => setOn(false) });
@@ -1275,8 +1279,8 @@
       if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); setOn(!toggle.classList.contains('on')); }
     });
   }
-  wireModeToggle({ itemId: 'toolWebSearch', toggleId: 'webSearchToggle', label: 'Web search' });
-  wireModeToggle({ itemId: 'toolResearch', toggleId: 'researchToggle', label: 'Research mode' });
+  wireModeToggle({ itemId: 'toolWebSearch', toggleId: 'webSearchToggle', label: 'Web search', stateKey: 'webSearch' });
+  wireModeToggle({ itemId: 'toolResearch', toggleId: 'researchToggle', label: 'Research mode', stateKey: 'research' });
 
   // Connectors — opens the existing full connectors browser
   document.getElementById('toolConnectors').addEventListener('click', () => {
