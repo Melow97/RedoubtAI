@@ -57,25 +57,30 @@ lazuli + gold glazed brick of the Ishtar Gate) rather than a generic palette.
 imagery only, no explicit religious branding. The tower reads as a watchtower/vantage
 point built up from accumulated knowledge, not the Babel story's hubris-and-collapse arc.
 
-## Real AI answers (chat is now wired to Claude)
+## Real AI answers (chat is now wired to Gemini)
 
 `chat-interface.html` opens blank and sends real messages to `api/chat.js` — a serverless
-function that calls the Claude API (Anthropic) with web search enabled, so it can answer
-things that depend on live information (scores, news, anything time-sensitive), not just
-its training knowledge. Note: **GitHub Pages cannot run this** — it's static-only. The chat
-will still load there but every message will show a "no backend here" message. Deploy to
-Vercel (or Netlify) to actually get answers:
+function that calls the Gemini API (Google) with Google Search grounding enabled, so it can
+answer things that depend on live information (scores, news, anything time-sensitive), not
+just its training knowledge. Note: **GitHub Pages cannot run this** — it's static-only. The
+chat will still load there but every message will show a "no backend here" message. Deploy
+to Vercel (or Netlify) to actually get answers:
 
-1. Get an API key at [console.anthropic.com](https://console.anthropic.com).
+1. Get a free API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey).
 2. Import this repo into [Vercel](https://vercel.com/new) — no build settings needed, it
    auto-detects the static site plus the `api/` function.
-3. In the Vercel project's **Settings → Environment Variables**, add `ANTHROPIC_API_KEY`
+3. In the Vercel project's **Settings → Environment Variables**, add `GEMINI_API_KEY`
    with your key. Never commit it to git or paste it into a chat — this is the only place
    it should live.
 4. Redeploy. Your Vercel URL now gives real answers in `chat-interface.html`.
 
 For local testing, copy `.env.example` to `.env.local`, fill in your key, and run
 `vercel dev` (or any Node server that mounts `api/chat.js` at `/api/chat`).
+
+Note: Gemini's free tier has fairly low rate limits (requests/minute) shared across every
+visitor to your site, and can change without notice — if the chat starts erroring under
+real traffic, check quota in [Google AI Studio](https://aistudio.google.com) before assuming
+it's a code bug.
 
 ## Real Stripe checkout with auto-granted Pro access
 
