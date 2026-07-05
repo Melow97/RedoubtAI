@@ -1,6 +1,6 @@
-// Vercel serverless function: proxies chat requests to the Anthropic API,
+// Vercel serverless function: proxies chat requests to the Gemini API,
 // and (when the caller includes an email) tracks token usage against a
-// monthly plan limit in Redis. ANTHROPIC_API_KEY is a server-side
+// monthly plan limit in Redis. GEMINI_API_KEY is a server-side
 // environment variable only -- set it in Vercel's Settings -> Environment
 // Variables. Never in git, never in chat.
 
@@ -12,9 +12,9 @@ const { sendAdminEmail } = require('./_lib/email');
 // selection can't be trusted (anyone could edit localStorage and claim a
 // tier they haven't paid for).
 const MODEL_MAP = {
-  standard: 'claude-haiku-4-5-20251001',
-  sentinel: 'claude-sonnet-5',
-  apex: 'claude-opus-4-8',
+  standard: 'gemini-2.0-flash',
+  sentinel: 'gemini-2.5-flash',
+  apex: 'gemini-2.5-pro',
 };
 // Apex is advertised for full website builds and complex fixes, which need
 // real output budget -- 1024 tokens would truncate mid-file.
@@ -23,7 +23,7 @@ const PRO_ONLY_MODELS = new Set(['sentinel', 'apex']);
 
 const SYSTEM_PROMPT =
   "You are Babylon AI, a security-focused AI copilot for a SOC/dev team. " +
-  "Be concise and precise. Use the web_search tool only when the answer " +
+  "Be concise and precise. Use Google Search only when the answer " +
   "depends on live or current information (scores, news, prices, today's " +
   "date-sensitive facts) — answer directly from your own knowledge otherwise.";
 
@@ -50,10 +50,10 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     res.status(500).json({
-      error: 'Server is missing ANTHROPIC_API_KEY. Set it in your hosting provider’s environment variables and redeploy.',
+      error: 'Server is missing GEMINI_API_KEY. Set it in your hosting provider’s environment variables and redeploy.',
     });
     return;
   }
@@ -91,22 +91,28 @@ module.exports = async function handler(req, res) {
   const modelKey = PRO_ONLY_MODELS.has(requestedModelKey) && plan !== 'pro' ? 'standard' : requestedModelKey;
   const resolvedModel = MODEL_MAP[modelKey];
 
+  const contents = messages.map((msg) => ({
+    role: msg.role === 'assistant' ? 'model' : 'user',
+    parts: [{ text: msg.content }],
+  }));
+
   try {
-    const upstream = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: resolvedModel,
-        max_tokens: MAX_TOKENS_MAP[modelKey],
-        system: SYSTEM_PROMPT,
-        messages,
-        tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 3 }],
-      }),
-    });
+    const upstream = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${resolvedModel}:generateContent`,
+      {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-goog-api-key': apiKey,
+        },
+        body: JSON.stringify({
+          contents,
+          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          generationConfig: { maxOutputTokens: MAX_TOKENS_MAP[modelKey] },
+          tools: [{ google_search: {} }],
+        }),
+      }
+    );
 
     const data = await upstream.json();
 
@@ -115,9 +121,9 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    const text = (data.content || [])
-      .filter((block) => block.type === 'text')
-      .map((block) => block.text)
+    const text = (data.candidates?.[0]?.content?.parts || [])
+      .filter((part) => typeof part.text === 'string')
+      .map((part) => part.text)
       .join('\n\n');
 
     const responsePayload = { text: text || '(No text content returned.)', model: modelKey };
@@ -126,7 +132,7 @@ module.exports = async function handler(req, res) {
     }
 
     if (trackUsage) {
-      const turnTokens = (data.usage?.input_tokens || 0) + (data.usage?.output_tokens || 0);
+      const turnTokens = (data.usageMetadata?.promptTokenCount || 0) + (data.usageMetadata?.candidatesTokenCount || 0);
       const newTokens = usage.tokens + turnTokens;
       const percent = Math.min(1, newTokens / limit);
       const key = 'usage:' + email.toLowerCase();
