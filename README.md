@@ -1,6 +1,8 @@
-# Redoubt — Design Previews
+# Tower of Babylon AI — Design Previews
 
-Working name: **Redoubt** (not finalized). Status: **design preview stage** — mostly static HTML/CSS/JS, plus one real backend function (the chat, see below) and a couple of other genuinely functional bits called out below.
+Working name: **Tower of Babylon AI** (short form "Babylon AI" used in the UI). Status:
+**design preview stage** — mostly static HTML/CSS/JS, plus one real backend function (the
+chat, see below) and a couple of other genuinely functional bits called out below.
 
 ## Pages
 
@@ -26,29 +28,34 @@ The chat input's `+` button opens a small popover with:
 
 ## Brand system
 
-**Theme:** light (white background).
+**Theme:** light, warm parchment/clay ground — a tower built from knowledge, not a cold
+security console. Grounded in real Babylonian material culture (sun-baked brick, the lapis
+lazuli + gold glazed brick of the Ishtar Gate) rather than a generic palette.
 
 **Colors**
 
 | Token | Hex | Use |
 |---|---|---|
-| Background | `#FFFFFF` | Base page background |
-| Panel | `#F6F7FA` | Cards, sidebar, raised surfaces |
-| Panel 2 | `#EEF0F4` | Slightly deeper panel variant |
-| Panel 3 | `#E5E8EF` | Deepest panel variant (chat input, hover states) |
-| Cyan (baseline/primary) | `#1C9A8D` | Primary accent, "normal" signal, CTAs |
-| Amber (warning) | `#C97F0F` | Elevated/under-review states |
-| Red (alert) | `#D93B3F` | Flagged anomalies, high severity |
-| Violet | `#6B5ECF` | Code/vulnerability scanning icon |
-| Coral | `#E2603F` | Phishing detection icon |
-| Text | `#0B1220` | Primary text |
+| Background | `#F5EDDC` | Base page background (parchment/sandstone) |
+| Panel | `#EADFC5` | Cards, sidebar, raised surfaces |
+| Panel 2 | `#E0D3AF` | Slightly deeper panel variant |
+| Panel 3 | `#D4C39B` | Deepest panel variant (chat input, hover states) |
+| Lapis (baseline/primary) | `#26417A` | Primary accent, "normal" signal, CTAs |
+| Terracotta (warning) | `#B5502D` | Elevated/under-review states |
+| Oxide red (alert) | `#9C2B2B` | Flagged anomalies, high severity |
+| Amethyst | `#5B3A8C` | Code/vulnerability scanning icon |
+| Clay | `#C2632E` | Phishing detection icon |
+| Antique gold | `#C9962B` | Pro badge, beacon accent |
+| Text | `#2B2013` | Primary text (umber-black) |
 
 **Typography**
-- Headlines: `Space Grotesk` (600/700)
+- Headlines: `Cinzel` (600/700) — a Roman-inscription-style serif, for a monumental/carved-stone feel
 - Body: `Inter` (400/500/600)
 - Data/labels/mono: `JetBrains Mono`
 
-**Logo:** a Spartan hoplite shield with a lambda (Λ) mark, rendered in the cyan accent.
+**Logo:** a ziggurat (stepped tower) silhouette with a small gold beacon at the apex —
+imagery only, no explicit religious branding. The tower reads as a watchtower/vantage
+point built up from accumulated knowledge, not the Babel story's hubris-and-collapse arc.
 
 ## Real AI answers (chat is now wired to Claude)
 

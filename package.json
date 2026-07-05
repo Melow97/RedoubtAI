@@ -1,8 +1,8 @@
 {
-  "name": "redoubt",
+  "name": "babylon-ai",
   "private": true,
   "version": "1.0.0",
-  "description": "Redoubt static site + serverless backend (chat proxy, Stripe webhook).",
+  "description": "Tower of Babylon AI static site + serverless backend (chat proxy, Stripe webhook).",
   "dependencies": {
     "@upstash/redis": "^1.38.0",
     "stripe": "^17.4.0"

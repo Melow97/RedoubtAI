@@ -10,7 +10,7 @@ const { sendAdminEmail } = require('./_lib/email');
 const MODEL = 'claude-sonnet-5';
 
 const SYSTEM_PROMPT =
-  "You are Redoubt, a security-focused AI copilot for a SOC/dev team. " +
+  "You are Babylon AI, a security-focused AI copilot for a SOC/dev team. " +
   "Be concise and precise. Use the web_search tool only when the answer " +
   "depends on live or current information (scores, news, prices, today's " +
   "date-sensitive facts) — answer directly from your own knowledge otherwise.";

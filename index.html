@@ -3,27 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Redoubt — See the breach before it happens</title>
-<meta name="description" content="Predictive threat detection, automated incident response, code scanning, and phishing detection — powered by AI that reads your traffic like a signal, not a log.">
+<title>Babylon AI — See the breach before it happens</title>
+<meta name="description" content="Tower of Babylon AI: predictive threat detection, automated incident response, code scanning, and phishing detection — a watchtower built on knowledge, not a log to sift through after the fact.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#0B1220;
-    --bg:#FFFFFF;
-    --panel:#F6F7FA;
-    --panel-2:#EEF0F4;
-    --line: rgba(11,18,32,0.10);
-    --line-strong: rgba(11,18,32,0.18);
-    --cyan:#1C9A8D;
-    --amber:#C97F0F;
-    --red:#D93B3F;
-    --violet:#6B5ECF;
-    --coral:#E2603F;
-    --paper:#0B1220;
-    --paper-dim: rgba(11,18,32,0.65);
-    --paper-faint: rgba(11,18,32,0.42);
+    --ink:#2B2013;
+    --bg:#F5EDDC;
+    --panel:#EADFC5;
+    --panel-2:#E0D3AF;
+    --line: rgba(43,32,19,0.10);
+    --line-strong: rgba(43,32,19,0.18);
+    --cyan:#26417A;
+    --amber:#B5502D;
+    --red:#9C2B2B;
+    --violet:#5B3A8C;
+    --coral:#C2632E;
+    --paper:#2B2013;
+    --paper-dim: rgba(43,32,19,0.65);
+    --paper-faint: rgba(43,32,19,0.42);
     --radius: 14px;
     --maxw: 1180px;
   }
@@ -39,7 +39,7 @@
     line-height:1.55;
   }
   h1,h2,h3,.display{
-    font-family:'Space Grotesk', system-ui, sans-serif;
+    font-family:'Cinzel', system-ui, serif;
     font-weight:600;
     letter-spacing:-0.01em;
     margin:0;
@@ -87,7 +87,7 @@
   }
   .logo{
     display:flex; align-items:center; gap:10px;
-    font-family:'Space Grotesk', sans-serif;
+    font-family:'Cinzel', serif;
     font-weight:700; font-size:19px;
     letter-spacing:-0.01em;
   }
@@ -125,15 +125,15 @@
     font-size:12px; color:var(--cyan);
     text-transform:uppercase;
     padding:6px 12px;
-    border:1px solid rgba(79,209,197,0.3);
+    border:1px solid rgba(38,65,122,0.3);
     border-radius:999px;
-    background:rgba(79,209,197,0.06);
+    background:rgba(38,65,122,0.06);
     margin-bottom:28px;
   }
   .eyebrow-dot{
     width:6px; height:6px; border-radius:50%;
     background:var(--cyan);
-    box-shadow:0 0 0 3px rgba(79,209,197,0.18);
+    box-shadow:0 0 0 3px rgba(38,65,122,0.18);
   }
   .hero h1{
     font-size:clamp(38px, 5.6vw, 68px);
@@ -162,7 +162,7 @@
     display:inline-flex; align-items:center; gap:8px;
     transition:transform .15s ease, box-shadow .15s ease;
   }
-  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 8px 24px rgba(79,209,197,0.22); }
+  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 8px 24px rgba(38,65,122,0.22); }
   .btn-secondary{
     background:transparent; color:var(--paper);
     border:1px solid var(--line-strong);
@@ -171,7 +171,7 @@
     cursor:pointer; text-decoration:none;
     transition:border-color .15s ease, background .15s ease;
   }
-  .btn-secondary:hover{ border-color:var(--paper-dim); background:rgba(11,18,32,0.04); }
+  .btn-secondary:hover{ border-color:var(--paper-dim); background:rgba(43,32,19,0.04); }
 
   /* ---------- signal trace signature ---------- */
   .trace-wrap{
@@ -198,8 +198,8 @@
     font-family:'JetBrains Mono', monospace;
     font-size:11px;
     color:var(--red);
-    background:rgba(229,72,77,0.1);
-    border:1px solid rgba(229,72,77,0.4);
+    background:rgba(156,43,43,0.1);
+    border:1px solid rgba(156,43,43,0.4);
     padding:3px 8px; border-radius:6px;
     top:22%; left:68%;
     opacity:0;
@@ -308,7 +308,7 @@
     font-size:12px;
     color:var(--cyan);
     width:38px; height:38px;
-    border:1px solid rgba(79,209,197,0.35);
+    border:1px solid rgba(38,65,122,0.35);
     border-radius:50%;
     display:flex; align-items:center; justify-content:center;
     margin-bottom:20px;
@@ -332,7 +332,7 @@
   }
   .stat:last-child{ border-right:none; }
   .stat-num{
-    font-family:'Space Grotesk', sans-serif;
+    font-family:'Cinzel', serif;
     font-size:32px; font-weight:600;
     color:var(--cyan);
   }
@@ -355,8 +355,8 @@
     display:flex; flex-direction:column;
   }
   .price-card.featured{
-    border-color:rgba(79,209,197,0.4);
-    background:linear-gradient(180deg, rgba(79,209,197,0.06), var(--panel) 60%);
+    border-color:rgba(38,65,122,0.4);
+    background:linear-gradient(180deg, rgba(38,65,122,0.06), var(--panel) 60%);
     position:relative;
   }
   .featured-badge{
@@ -366,7 +366,7 @@
     padding:4px 10px; border-radius:999px;
   }
   .price-tier{ font-size:14px; color:var(--paper-dim); margin-bottom:10px; }
-  .price-amount{ font-family:'Space Grotesk', sans-serif; font-size:34px; font-weight:600; }
+  .price-amount{ font-family:'Cinzel', serif; font-size:34px; font-weight:600; }
   .price-amount span{ font-size:14px; font-weight:400; color:var(--paper-faint); }
   .price-desc{ margin:14px 0 22px; font-size:14px; color:var(--paper-dim); }
   .price-features{
@@ -428,7 +428,7 @@
     text-decoration:none; white-space:nowrap;
     transition:border-color .15s ease, background .15s ease;
   }
-  .datasheet-btn:hover{ border-color:var(--cyan); background:rgba(79,209,197,0.06); }
+  .datasheet-btn:hover{ border-color:var(--cyan); background:rgba(38,65,122,0.06); }
 
   .htable{
     width:100%; border-collapse:collapse;
@@ -450,9 +450,9 @@
   }
   .htable tbody tr:last-child td{ border-bottom:none; }
   .htable tbody tr{ transition:background .15s ease; }
-  .htable tbody tr:hover{ background:rgba(11,18,32,0.03); }
+  .htable tbody tr:hover{ background:rgba(43,32,19,0.03); }
   .htable .feat-name{
-    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:14.5px;
+    font-family:'Cinzel', serif; font-weight:600; font-size:14.5px;
     color:var(--paper); white-space:nowrap;
   }
   .htable .feat-detail{ color:var(--paper-dim); line-height:1.6; }
@@ -478,13 +478,13 @@
     padding:30px;
     background:var(--panel);
   }
-  .oss-card.core{ border-color:rgba(79,209,197,0.35); background:linear-gradient(160deg, rgba(79,209,197,0.05), var(--panel) 55%); }
+  .oss-card.core{ border-color:rgba(38,65,122,0.35); background:linear-gradient(160deg, rgba(38,65,122,0.05), var(--panel) 55%); }
   .oss-tag{
     display:inline-block; font-size:11px; font-weight:600; text-transform:uppercase;
     padding:4px 10px; border-radius:999px; margin-bottom:16px;
   }
-  .oss-tag.free{ background:rgba(79,209,197,0.14); color:var(--cyan); }
-  .oss-tag.cloud{ background:rgba(242,169,59,0.14); color:var(--amber); }
+  .oss-tag.free{ background:rgba(38,65,122,0.14); color:var(--cyan); }
+  .oss-tag.cloud{ background:rgba(181,80,45,0.14); color:var(--amber); }
   .oss-card h3{ font-size:19px; margin-bottom:10px; }
   .oss-card p{ font-size:13.5px; color:var(--paper-dim); margin:0 0 18px; }
   .oss-list{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:9px; }
@@ -511,8 +511,8 @@
     padding:4px 9px; border-radius:6px;
     margin-bottom:16px; width:fit-content;
   }
-  .learn-tag.prep{ background:rgba(79,209,197,0.14); color:var(--cyan); }
-  .learn-tag.partner{ background:rgba(242,169,59,0.14); color:var(--amber); }
+  .learn-tag.prep{ background:rgba(38,65,122,0.14); color:var(--cyan); }
+  .learn-tag.partner{ background:rgba(181,80,45,0.14); color:var(--amber); }
   .learn-card h3{ font-size:16.5px; margin-bottom:8px; }
   .learn-card p{ font-size:13px; color:var(--paper-dim); margin:0 0 18px; flex-grow:1; }
   .learn-meta{
@@ -572,7 +572,7 @@
   .footer-badge{
     display:inline-flex; align-items:center; gap:6px;
     font-size:11px; color:var(--paper-faint);
-    background:rgba(11,18,32,0.05);
+    background:rgba(43,32,19,0.05);
     border:1px solid var(--line);
     padding:3px 8px; border-radius:6px;
     margin-left:8px;
@@ -612,8 +612,7 @@
 
 <div class="corner-badge">
   <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
-    <path d="M16 2 L26 6 V14 C26 21.5 21.5 27 16 30 C10.5 27 6 21.5 6 14 V6 Z" stroke="#1C9A8D" stroke-width="1.6" stroke-linejoin="round" fill="rgba(28,154,141,0.06)"/>
-    <path d="M11.5 21 L16 9 L20.5 21" stroke="#1C9A8D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="4" y="24" width="24" height="5" stroke="#26417A" stroke-width="1.4" fill="rgba(38,65,122,0.08)"/><rect x="7" y="19" width="18" height="5" stroke="#26417A" stroke-width="1.4" fill="rgba(38,65,122,0.08)"/><rect x="10" y="14" width="12" height="5" stroke="#26417A" stroke-width="1.4" fill="rgba(38,65,122,0.08)"/><rect x="13" y="9" width="6" height="5" stroke="#26417A" stroke-width="1.4" fill="rgba(38,65,122,0.08)"/><circle cx="16" cy="6" r="1.6" fill="#C9962B"/>
   </svg>
 </div>
 
@@ -622,10 +621,9 @@
   <nav>
     <div class="logo">
       <svg class="logo-mark" viewBox="0 0 32 32" fill="none">
-        <path d="M16 2 L26 6 V14 C26 21.5 21.5 27 16 30 C10.5 27 6 21.5 6 14 V6 Z" stroke="#1C9A8D" stroke-width="1.6" stroke-linejoin="round" fill="rgba(79,209,197,0.07)"/>
-        <path d="M11.5 21 L16 9 L20.5 21" stroke="#1C9A8D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="4" y="24" width="24" height="5" stroke="#26417A" stroke-width="1.4" fill="rgba(38,65,122,0.08)"/><rect x="7" y="19" width="18" height="5" stroke="#26417A" stroke-width="1.4" fill="rgba(38,65,122,0.08)"/><rect x="10" y="14" width="12" height="5" stroke="#26417A" stroke-width="1.4" fill="rgba(38,65,122,0.08)"/><rect x="13" y="9" width="6" height="5" stroke="#26417A" stroke-width="1.4" fill="rgba(38,65,122,0.08)"/><circle cx="16" cy="6" r="1.6" fill="#C9962B"/>
       </svg>
-      Redoubt
+      Babylon AI
     </div>
     <div class="nav-links nav-mobile-hide">
       <a href="#capabilities">Capabilities</a>
@@ -643,10 +641,10 @@
   <section class="hero">
     <div class="wrap">
       <span class="eyebrow mono"><span class="eyebrow-dot"></span>AI security copilot</span>
-      <h1>See the breach<br><em>before it happens.</em></h1>
+      <h1>A tower built<br><em>on knowledge.</em></h1>
       <p class="hero-sub">
-        Redoubt is a chat-native AI copilot built for security teams — it reads your traffic, your code, and your
-        alert queue the way a senior analyst would, and talks you through what's actually worth your attention.
+        Babylon AI is a chat-native AI copilot built for security teams — it watches your traffic, your code, and your
+        alert queue from higher ground, and talks you through what's actually worth your attention before it becomes a problem.
       </p>
       <div class="hero-actions">
         <a href="#waitlist" class="btn-primary">
@@ -656,7 +654,7 @@
         <a href="#capabilities" class="btn-secondary">See what it does</a>
       </div>
       <div class="mono" style="margin-top:22px; font-size:12px; color:var(--paper-faint); display:flex; align-items:center; gap:8px;">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M17.5 2h-11A2.5 2.5 0 004 4.5v15A2.5 2.5 0 006.5 22h11a2.5 2.5 0 002.5-2.5v-15A2.5 2.5 0 0017.5 2zM12 19a1 1 0 110-2 1 1 0 010 2z" stroke="#0B1220" stroke-opacity="0.5" stroke-width="1.3"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M17.5 2h-11A2.5 2.5 0 004 4.5v15A2.5 2.5 0 006.5 22h11a2.5 2.5 0 002.5-2.5v-15A2.5 2.5 0 0017.5 2zM12 19a1 1 0 110-2 1 1 0 010 2z" stroke="#2B2013" stroke-opacity="0.5" stroke-width="1.3"/></svg>
         Coming soon to iOS &amp; Android
       </div>
 
@@ -664,19 +662,19 @@
       <div class="trace-wrap reveal">
         <div class="trace-head">
           <span class="mono">net-traffic.eth0 · live</span>
-          <span class="status"><svg width="8" height="8" style="margin-right:2px"><circle cx="4" cy="4" r="4" fill="#1C9A8D"/></svg>monitoring</span>
+          <span class="status"><svg width="8" height="8" style="margin-right:2px"><circle cx="4" cy="4" r="4" fill="#26417A"/></svg>monitoring</span>
         </div>
         <div class="trace-svg-wrap">
           <span class="trace-tag">flagged in 41ms</span>
           <svg viewBox="0 0 1000 180" width="100%" style="display:block">
             <defs>
               <linearGradient id="fadeMask" x1="0" x2="1">
-                <stop offset="0" stop-color="#1C9A8D" stop-opacity="0.5"/>
-                <stop offset="1" stop-color="#1C9A8D" stop-opacity="0"/>
+                <stop offset="0" stop-color="#26417A" stop-opacity="0.5"/>
+                <stop offset="1" stop-color="#26417A" stop-opacity="0"/>
               </linearGradient>
             </defs>
             <!-- gridlines -->
-            <g stroke="rgba(11,18,32,0.08)">
+            <g stroke="rgba(43,32,19,0.08)">
               <line x1="0" y1="45" x2="1000" y2="45"/>
               <line x1="0" y1="90" x2="1000" y2="90"/>
               <line x1="0" y1="135" x2="1000" y2="135"/>
@@ -686,24 +684,24 @@
                      C400,88 440,96 480,90
                      C500,20 520,160 540,90
                      C580,84 620,100 660,92 C700,86 740,98 780,94 C820,88 860,96 900,90 C940,86 970,94 1000,90"
-              fill="none" stroke="#1C9A8D" stroke-width="2" stroke-linecap="round">
-              <animate attributeName="stroke" values="#1C9A8D;#1C9A8D;#D93B3F;#1C9A8D;#1C9A8D" dur="6s" keyTimes="0;0.44;0.5;0.56;1" repeatCount="indefinite"/>
+              fill="none" stroke="#26417A" stroke-width="2" stroke-linecap="round">
+              <animate attributeName="stroke" values="#26417A;#26417A;#9C2B2B;#26417A;#26417A" dur="6s" keyTimes="0;0.44;0.5;0.56;1" repeatCount="indefinite"/>
             </path>
             <!-- scanning sweep -->
             <rect x="0" y="0" width="120" height="180" fill="url(#fadeMask)">
               <animate attributeName="x" from="-120" to="1000" dur="6s" repeatCount="indefinite"/>
             </rect>
             <!-- anomaly marker dot -->
-            <circle cx="510" cy="20" r="0" fill="#D93B3F">
+            <circle cx="510" cy="20" r="0" fill="#9C2B2B">
               <animate attributeName="r" values="0;0;5;5;0" keyTimes="0;0.44;0.5;0.7;1" dur="6s" repeatCount="indefinite"/>
               <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.44;0.5;0.7;1" dur="6s" repeatCount="indefinite"/>
             </circle>
           </svg>
         </div>
         <div class="trace-legend">
-          <span><span class="swatch" style="background:#1C9A8D"></span>baseline traffic</span>
-          <span><span class="swatch" style="background:#D93B3F"></span>flagged anomaly</span>
-          <span><span class="swatch" style="background:#C97F0F"></span>under review</span>
+          <span><span class="swatch" style="background:#26417A"></span>baseline traffic</span>
+          <span><span class="swatch" style="background:#9C2B2B"></span>flagged anomaly</span>
+          <span><span class="swatch" style="background:#B5502D"></span>under review</span>
         </div>
       </div>
     </div>
@@ -723,30 +721,30 @@
       <div class="pillars reveal">
         <div class="pillar">
           <svg class="pillar-icon" viewBox="0 0 38 38" fill="none">
-            <path d="M4 24 L11 24 L14 13 L20 30 L24 19 L34 19" stroke="#1C9A8D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 24 L11 24 L14 13 L20 30 L24 19 L34 19" stroke="#26417A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <h3>Predictive threat detection</h3>
           <p>Machine learning models trained on historical attack data and live network traffic patterns spot anomalies before they escalate into a breach — not after.</p>
         </div>
         <div class="pillar">
           <svg class="pillar-icon" viewBox="0 0 38 38" fill="none">
-            <circle cx="19" cy="19" r="13" stroke="#C97F0F" stroke-width="2"/>
-            <path d="M19 12v7l5 3" stroke="#C97F0F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="19" cy="19" r="13" stroke="#B5502D" stroke-width="2"/>
+            <path d="M19 12v7l5 3" stroke="#B5502D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <h3>Automated incident response</h3>
           <p>An AI agent triages and summarizes alerts as they arrive, so your SOC spends its attention on the handful that matter instead of drowning in the queue.</p>
         </div>
         <div class="pillar">
           <svg class="pillar-icon" viewBox="0 0 38 38" fill="none">
-            <path d="M13 10 L6 19 L13 28 M25 10 L32 19 L25 28" stroke="#8C7FE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M13 10 L6 19 L13 28 M25 10 L32 19 L25 28" stroke="#7C5CB0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <h3>Code &amp; vulnerability scanning</h3>
           <p>Context-aware models read source code the way a senior engineer would — finding real vulnerabilities and ranking patches by actual risk, not just pattern match.</p>
         </div>
         <div class="pillar">
           <svg class="pillar-icon" viewBox="0 0 38 38" fill="none">
-            <rect x="5" y="10" width="28" height="18" rx="2" stroke="#F2795B" stroke-width="2"/>
-            <path d="M5 12 L19 22 L33 12" stroke="#F2795B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="5" y="10" width="28" height="18" rx="2" stroke="#D97B4F" stroke-width="2"/>
+            <path d="M5 12 L19 22 L33 12" stroke="#D97B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <h3>Phishing detection</h3>
           <p>NLP models trace suspicious language, sender behavior, and domain patterns to catch phishing attempts that slide past legacy filters.</p>
@@ -770,20 +768,20 @@
       <div class="section-head reveal">
         <span class="section-eyebrow mono">One system, not a bolt-on</span>
         <h2>Built with the response in mind, not added to it after.</h2>
-        <p>Most security tools are built first, then wired up to whatever team ends up running them. Redoubt was designed the other way around — the detection engine and the response workflow were built as one thing from day one, so nothing gets lost translating an alert into an action.</p>
+        <p>Most security tools are built first, then wired up to whatever team ends up running them. Babylon AI was designed the other way around — the detection engine and the response workflow were built as one thing from day one, so nothing gets lost translating an alert into an action.</p>
       </div>
       <div class="pillars reveal">
         <div class="pillar">
           <svg class="pillar-icon" viewBox="0 0 38 38" fill="none">
-            <circle cx="19" cy="19" r="14" stroke="#1C9A8D" stroke-width="2"/>
-            <circle cx="19" cy="19" r="4" fill="#1C9A8D"/>
+            <circle cx="19" cy="19" r="14" stroke="#26417A" stroke-width="2"/>
+            <circle cx="19" cy="19" r="4" fill="#26417A"/>
           </svg>
           <h3>Detection and response share context</h3>
           <p>When the model flags something, it hands off everything it already knows — no re-explaining the situation to a separate tool or a separate team.</p>
         </div>
         <div class="pillar">
           <svg class="pillar-icon" viewBox="0 0 38 38" fill="none">
-            <path d="M8 19 L16 27 L31 10" stroke="#C97F0F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 19 L16 27 L31 10" stroke="#B5502D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <h3>Humans stay in the loop, not out of it</h3>
           <p>Low-risk findings resolve automatically. Everything else reaches a person with the reasoning already attached — not just a score.</p>
@@ -839,7 +837,7 @@
           <p>Every finding, every automated action, every model call — traceable, auditable, and yours to inspect.</p>
         </div>
         <a href="#waitlist" class="datasheet-btn">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M3.5 5.5L7 9l3.5-3.5M2 12h10" stroke="#0B1220" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M3.5 5.5L7 9l3.5-3.5M2 12h10" stroke="#2B2013" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Get the datasheet
         </a>
       </div>
@@ -852,7 +850,7 @@
           <tbody>
             <tr>
               <td class="feat-name">Agent traceability</td>
-              <td class="feat-detail">Every action Redoubt's agent takes — a query, a triage decision, a drafted report — is logged as a replayable step, not a black-box output.</td>
+              <td class="feat-detail">Every action Babylon AI's agent takes — a query, a triage decision, a drafted report — is logged as a replayable step, not a black-box output.</td>
               <td class="feat-benefit">Full observability into what your AI actually did, end to end.</td>
             </tr>
             <tr>
@@ -905,24 +903,24 @@
       <div class="oss-grid reveal">
         <div class="oss-card core">
           <span class="oss-tag free">Free &amp; open source</span>
-          <h3>Redoubt Core</h3>
+          <h3>Babylon AI Core</h3>
           <p>The full detection engine, chat copilot, and connector framework — self-hosted, no feature gate, no seat limit.</p>
           <ul class="oss-list">
-            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>MIT-licensed source, hosted on GitHub</li>
-            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Deploy on your own servers or air-gapped</li>
-            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Community detection rules included</li>
-            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#1C9A8D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Bring your own model or run local inference</li>
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#26417A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>MIT-licensed source, hosted on GitHub</li>
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#26417A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Deploy on your own servers or air-gapped</li>
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#26417A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Community detection rules included</li>
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#26417A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Bring your own model or run local inference</li>
           </ul>
         </div>
         <div class="oss-card">
           <span class="oss-tag cloud">Managed cloud</span>
-          <h3>Redoubt Cloud</h3>
+          <h3>Babylon AI Cloud</h3>
           <p>Same engine, hosted and supported — for teams that want an SLA, managed upgrades, and a support line instead of an ops burden.</p>
           <ul class="oss-list">
-            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#C97F0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Uptime SLA and priority support</li>
-            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#C97F0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Managed updates, no infra to maintain</li>
-            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#C97F0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>SSO, org-wide billing, admin console</li>
-            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#C97F0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Same open core underneath — never locked in</li>
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#B5502D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Uptime SLA and priority support</li>
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#B5502D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Managed updates, no infra to maintain</li>
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#B5502D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>SSO, org-wide billing, admin console</li>
+            <li><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 8l3 3 6-7" stroke="#B5502D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Same open core underneath — never locked in</li>
           </ul>
         </div>
       </div>
@@ -937,7 +935,7 @@
       <div class="section-head reveal">
         <span class="section-eyebrow mono">Pro perk</span>
         <h2>Learn while you defend.</h2>
-        <p>Redoubt notices the gaps in what you ask about, then points you toward the certification or course that actually closes them — instead of a generic course catalog nobody browses.</p>
+        <p>Babylon AI notices the gaps in what you ask about, then points you toward the certification or course that actually closes them — instead of a generic course catalog nobody browses.</p>
       </div>
 
       <div class="learn-grid reveal">
@@ -987,7 +985,7 @@
         <div class="learn-card">
           <span class="learn-tag prep">Guide</span>
           <h3>Cipher &amp; Cryptography Challenges</h3>
-          <p>CTF-style puzzles — classical ciphers, XOR, hashing, and encoding — with Redoubt as a hint-giver rather than an answer key.</p>
+          <p>CTF-style puzzles — classical ciphers, XOR, hashing, and encoding — with Babylon AI as a hint-giver rather than an answer key.</p>
           <div class="learn-meta">
             <span>24 challenges · self-paced</span>
             <span class="mono">3/24</span>
@@ -997,7 +995,7 @@
       </div>
 
       <p class="learn-note">
-        RHCSA/RHCE prep tracks and the bug bounty &amp; cipher guides are original educational content — Redoubt is not an official Red Hat training partner, and completing these tracks doesn't replace an official exam. Partner course recommendations link out to Udemy via standard affiliate links. These guides teach methodology and concepts; Redoubt does not include built-in exploitation tooling (e.g. Metasploit, automated SQL injection) that executes against live targets.
+        RHCSA/RHCE prep tracks and the bug bounty &amp; cipher guides are original educational content — Babylon AI is not an official Red Hat training partner, and completing these tracks doesn't replace an official exam. Partner course recommendations link out to Udemy via standard affiliate links. These guides teach methodology and concepts; Babylon AI does not include built-in exploitation tooling (e.g. Metasploit, automated SQL injection) that executes against live targets.
       </p>
     </div>
   </section>
@@ -1019,10 +1017,10 @@
           <div class="price-amount">€0<span>/mo</span></div>
           <p class="price-desc">More room to explore than most AI chat tools give new users.</p>
           <ul class="price-features">
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Generous daily message allowance</li>
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>1 monitored environment</li>
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Phishing &amp; anomaly alerts</li>
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>7-day alert history</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#26417A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Generous daily message allowance</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#26417A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>1 monitored environment</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#26417A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Phishing &amp; anomaly alerts</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#26417A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>7-day alert history</li>
           </ul>
           <a href="#waitlist" class="btn-secondary" style="text-align:center">Start free</a>
         </div>
@@ -1032,12 +1030,12 @@
           <div class="price-amount">€12<span>/mo</span></div>
           <p class="price-desc">First month free, then €12/mo. Cancel any time before you're charged.</p>
           <ul class="price-features">
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited chat with your copilot</li>
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Up to 10 monitored environments</li>
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Automated incident response</li>
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Code &amp; vulnerability scanning</li>
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>90-day alert history</li>
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Learning Hub: cert prep tracks + course recs</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#26417A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited chat with your copilot</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#26417A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Up to 10 monitored environments</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#26417A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Automated incident response</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#26417A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Code &amp; vulnerability scanning</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#26417A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>90-day alert history</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#26417A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Learning Hub: cert prep tracks + course recs</li>
           </ul>
           <a href="welcome-screen.html" class="btn-primary" style="text-align:center; justify-content:center" data-stripe-checkout>Start free trial</a>
         </div>
@@ -1046,9 +1044,9 @@
           <div class="price-amount">Custom</div>
           <p class="price-desc">For orgs with compliance and scale needs.</p>
           <ul class="price-features">
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited environments</li>
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>SSO, audit logs, SLAs</li>
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#1C9A8D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Dedicated onboarding</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#26417A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited environments</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#26417A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>SSO, audit logs, SLAs</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#26417A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Dedicated onboarding</li>
           </ul>
           <a href="#waitlist" class="btn-secondary" style="text-align:center">Talk to us</a>
         </div>
@@ -1081,12 +1079,11 @@
       <div class="footer-brand">
         <div class="logo">
           <svg class="logo-mark" viewBox="0 0 32 32" fill="none">
-            <path d="M16 2 L26 6 V14 C26 21.5 21.5 27 16 30 C10.5 27 6 21.5 6 14 V6 Z" stroke="#1C9A8D" stroke-width="1.6" stroke-linejoin="round" fill="rgba(79,209,197,0.07)"/>
-            <path d="M11.5 21 L16 9 L20.5 21" stroke="#1C9A8D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="4" y="24" width="24" height="5" stroke="#26417A" stroke-width="1.4" fill="rgba(38,65,122,0.08)"/><rect x="7" y="19" width="18" height="5" stroke="#26417A" stroke-width="1.4" fill="rgba(38,65,122,0.08)"/><rect x="10" y="14" width="12" height="5" stroke="#26417A" stroke-width="1.4" fill="rgba(38,65,122,0.08)"/><rect x="13" y="9" width="6" height="5" stroke="#26417A" stroke-width="1.4" fill="rgba(38,65,122,0.08)"/><circle cx="16" cy="6" r="1.6" fill="#C9962B"/>
           </svg>
-          Redoubt
+          Babylon AI
         </div>
-        <p>An AI security copilot that watches your traffic, your code, and your alerts — and talks you through what's actually worth your attention.</p>
+        <p>Tower of Babylon AI — a security copilot built on knowledge, standing watch over your traffic, your code, and your alerts.</p>
         <div class="footer-social">
           <a href="#" aria-label="X / Twitter"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23.3 22h-7l-5.5-7.2L4.5 22H1.4l8.1-9.3L1 2h7.2l5 6.6L18.9 2z"/></svg></a>
           <a href="#" aria-label="LinkedIn"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM.5 8.5h9V23h-9V8.5zM8.5 8.5h8.6v2h.1c1.2-2.1 4.1-2.2 5.7-.6 1.6 1.7 1.6 3.8 1.6 5.9V23h-9v-6.1c0-1.5 0-3.4-2.1-3.4s-2.4 1.6-2.4 3.3V23h-9V8.5H8.5z"/></svg></a>
@@ -1144,9 +1141,9 @@
     </div>
 
     <div class="footer-bottom">
-      <span>© 2026 Redoubt. Built for teams who'd rather catch it early.
+      <span>© 2026 Babylon AI. Built for teams who'd rather catch it early.
         <span class="footer-badge">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><rect x="6" y="2" width="12" height="20" rx="3" stroke="#8B94AA" stroke-width="1.6"/></svg>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><rect x="6" y="2" width="12" height="20" rx="3" stroke="#9C8F76" stroke-width="1.6"/></svg>
           iOS &amp; Android — coming soon
         </span>
       </span>

@@ -20,7 +20,7 @@ async function sendAdminEmail(subject, text) {
         authorization: 'Bearer ' + apiKey,
       },
       body: JSON.stringify({
-        from: process.env.RESEND_FROM_EMAIL || 'Redoubt <onboarding@resend.dev>',
+        from: process.env.RESEND_FROM_EMAIL || 'Babylon AI <onboarding@resend.dev>',
         to: adminEmail,
         subject,
         text,
