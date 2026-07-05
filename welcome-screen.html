@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   :root{
     --ink:#2B2013;
@@ -93,6 +94,16 @@
     transition:background .15s ease, border-color .15s ease;
   }
   .oauth-btn:hover{ background:#20305680; border-color:var(--paper-faint); }
+  .oauth-btn:disabled{ opacity:0.6; cursor:not-allowed; }
+
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(10px);
+    background:var(--ink); color:#fff; font-size:13px;
+    padding:10px 16px; border-radius:9px;
+    opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease;
+    z-index:300;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
   .divider-row{
     display:flex; align-items:center; gap:12px;
@@ -196,7 +207,7 @@
 
   <div class="trial-badge mono">30-day Pro trial · card required · billed €12 after</div>
 
-  <button class="oauth-btn">
+  <button type="button" id="googleBtn" class="oauth-btn">
     <svg width="16" height="16" viewBox="0 0 16 16"><path fill="#4285F4" d="M15.68 8.18c0-.57-.05-1.11-.14-1.64H8v3.1h4.3a3.68 3.68 0 01-1.6 2.42v2h2.58c1.51-1.39 2.4-3.44 2.4-5.88z"/><path fill="#34A853" d="M8 16c2.16 0 3.97-.72 5.3-1.94l-2.58-2c-.72.48-1.64.77-2.72.77-2.09 0-3.86-1.41-4.49-3.31H.85v2.07A8 8 0 008 16z"/><path fill="#FBBC05" d="M3.51 9.52A4.8 4.8 0 013.24 8c0-.53.09-1.04.27-1.52V4.41H.85A8 8 0 000 8c0 1.29.31 2.51.85 3.59l2.66-2.07z"/><path fill="#EA4335" d="M8 3.18c1.18 0 2.23.4 3.06 1.2l2.29-2.29A7.9 7.9 0 008 0 8 8 0 00.85 4.41l2.66 2.07C4.14 4.59 5.91 3.18 8 3.18z"/></svg>
     Continue with Google
   </button>
@@ -228,18 +239,33 @@
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
+  // Public OAuth Client ID from Google Cloud Console -> APIs & Services ->
+  // Credentials -> Create Credentials -> OAuth client ID (type: Web application).
+  // Add this page's origin (e.g. https://your-app.vercel.app and
+  // http://localhost:3000 for local testing) under "Authorized JavaScript
+  // origins". This is a public identifier, not a secret -- safe to hand-edit
+  // directly, same as STRIPE_PAYMENT_LINK in index.html.
+  const GOOGLE_CLIENT_ID = '';
+
   const continueBtn = document.getElementById('continueBtn');
   const continueLabel = document.getElementById('continueLabel');
   const emailInput = document.getElementById('email');
+  const googleBtn = document.getElementById('googleBtn');
+  const toastEl = document.getElementById('toast');
 
-  continueBtn.addEventListener('click', async () => {
-    const email = emailInput.value.trim();
+  function showToast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toastEl.classList.remove('show'), 3200);
+  }
+
+  async function checkPlanAndRedirect(email){
     let plan = 'free';
-
     if (email) {
-      continueLabel.textContent = 'Checking…';
-      continueBtn.disabled = true;
       try {
         const resp = await fetch('/api/check-plan', {
           method: 'POST',
@@ -252,9 +278,51 @@
         // no backend here (e.g. a static host) -- fall back to free, don't block sign-in
       }
     }
-
     localStorage.setItem('redoubt-user', JSON.stringify({ email, plan }));
     window.location.href = 'chat-interface.html';
+  }
+
+  continueBtn.addEventListener('click', async () => {
+    const email = emailInput.value.trim();
+    if (email) {
+      continueLabel.textContent = 'Checking…';
+      continueBtn.disabled = true;
+    }
+    await checkPlanAndRedirect(email);
+  });
+
+  googleBtn.addEventListener('click', () => {
+    if (!GOOGLE_CLIENT_ID) {
+      showToast('Google sign-in isn’t configured yet — add a Client ID to GOOGLE_CLIENT_ID in welcome-screen.html.');
+      return;
+    }
+    if (typeof google === 'undefined' || !google.accounts?.oauth2) {
+      showToast('Still loading Google sign-in — try again in a moment.');
+      return;
+    }
+
+    const tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: 'openid email profile',
+      callback: async (tokenResponse) => {
+        if (tokenResponse.error) {
+          showToast('Google sign-in failed or was cancelled.');
+          return;
+        }
+        googleBtn.disabled = true;
+        try {
+          const profileResp = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: { Authorization: 'Bearer ' + tokenResponse.access_token },
+          });
+          const profile = await profileResp.json();
+          await checkPlanAndRedirect(profile.email || '');
+        } catch {
+          showToast('Could not read your Google profile — try again.');
+          googleBtn.disabled = false;
+        }
+      },
+    });
+    tokenClient.requestAccessToken();
   });
 </script>
 
