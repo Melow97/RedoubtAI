@@ -4,6 +4,7 @@
 // Redis store via Vercel's Storage tab (Marketplace -> Redis).
 
 const { Redis } = require('@upstash/redis');
+const { isProOverride } = require('./_lib/plan');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -14,6 +15,11 @@ module.exports = async function handler(req, res) {
   const { email } = req.body || {};
   if (!email || typeof email !== 'string') {
     res.status(400).json({ error: 'Request body must include an "email" string.' });
+    return;
+  }
+
+  if (isProOverride(email)) {
+    res.status(200).json({ plan: 'pro' });
     return;
   }
 
