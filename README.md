@@ -146,6 +146,11 @@ marks that email as Pro; entering the same email again unlocks it. Setup:
 forged/tampered payloads — both are rejected) before writing anything, so a request can't
 grant itself Pro without a genuine signed event from Stripe.
 
+**Testing your own account as Pro** without paying: add your email to `PRO_OVERRIDE_EMAILS`
+(comma-separated) in Vercel's environment variables and redeploy. Any email in that list
+always resolves to Pro — no Stripe, no Redis required. It's read server-side only (`api/
+_lib/plan.js`); nothing in the UI exposes or hints at it. Leave it unset in normal operation.
+
 ## Usage limits + admin email alerts
 
 Chat requests are metered per email, per calendar month, in Redis (the same store as the

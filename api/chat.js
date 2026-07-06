@@ -7,6 +7,7 @@
 
 const { Redis } = require('@upstash/redis');
 const { sendAdminEmail } = require('./_lib/email');
+const { isProOverride } = require('./_lib/plan');
 
 // Model per selector tier. Foundation is available to everyone; Sentinel
 // and Apex are Pro-only -- enforced server-side below, since the client's
@@ -103,15 +104,17 @@ module.exports = async function handler(req, res) {
   const redis = hasRedis ? Redis.fromEnv() : null;
   const trackUsage = Boolean(redis && email);
 
-  let plan = 'free';
+  let plan = isProOverride(email) ? 'pro' : 'free';
   let usage = { tokens: 0, period: currentPeriod(), alerted: false };
-  let limit = PLAN_LIMITS.free;
+  let limit = PLAN_LIMITS[plan];
 
   if (trackUsage) {
-    const key = 'plan:' + email.toLowerCase();
-    const planRecord = await redis.get(key);
-    plan = planRecord?.plan === 'pro' ? 'pro' : 'free';
-    limit = PLAN_LIMITS[plan];
+    if (plan !== 'pro') {
+      const key = 'plan:' + email.toLowerCase();
+      const planRecord = await redis.get(key);
+      plan = planRecord?.plan === 'pro' ? 'pro' : 'free';
+      limit = PLAN_LIMITS[plan];
+    }
     usage = await loadUsage(redis, email.toLowerCase());
 
     if (usage.tokens >= limit) {
